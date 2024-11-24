@@ -3,29 +3,12 @@
 Here's a breakdown of topics at each level and suggestions on areas you can explore further:
 **[`back`](./_menu_.md)**
 
-## Beginner Topics
-You seem to have covered all of these already:
-- ~~**Data Types**: `Integers`, `floats`, `strings`, `lists`, `tuples`, `sets`, `dictionaries`, `bytarrya`, `bytes`, `memoryview`.~~
-- ~~**Simple String Operations**: Slicing, concatenation, basic string methods.~~
-- ~~**Basic I/O**: Reading from and writing to files, input/output functions.~~
-- ~~**Basic Modules**: Importing built-in and third-party modules.~~
-- ~~**Control Structures**: if-else, for/while loops, break/continue/pass.~~
-- ~~**Functions**: Defining functions, scope, arguments (default, keyword).~~
-- ~~**Error and Exception Handling**: Basic try-except blocks, best practice.~~
-- ~~**Advanced lamda functiones**~~
+
 
 ## Intermediate Topics
 You have already covered these well:
-- ~~**OOP Concepts**: Classes, objects, inheritance, encapsulation, polymorphism, abstract classes.~~
-- ~~**Comprehensions**: List, dictionary, set, and generator comprehensions.~~
-- ~~**Decorators**: Creating and applying `decorators`.~~
-- ~~**File Handling**: Reading/writing files, working `with` binary files.~~
-- ~~**Iterators and Generators**: `iter()`, `next()`, `yield` usage.~~
-- ~~**Testing**: unittest basics, pytest.~~
-- ~~**String Formatting**: `f-strings`, `.format()`, old-style formatting (%).~~
 
--
-- ~~**Built-in Modules**: os, shutil, subprocess, math, etc.~~
+
 - ~~**Basic GUI Development**: tkinter and PyQt.~~
 - ~~**Networking with Requests**: Basic HTTP requests, API calls.~~
 - ~~**Web Scraping**: Using BeautifulSoup and Scrapy for extracting data from web pages.~~
