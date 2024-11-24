@@ -9,97 +9,119 @@
 8. [comerhension and teronary](./comerhension.md)
 9. [decorators](./decorators.md)
 10. [iterators and genrators](./iterators.md)
-11. [oops](./oops.md)
+11. [oops, modules](./oops.md)
 12. [build-tools](./build.tools.md)
 
 ## python menu - advanced and master
-1. [package_managers](./package_manager.md)
-2. [enviorment](./enviorment_and_tools.md)
-3. [Concurrency](./concurancy.md)
-4. [testing](./testing.md)
-5. lean framwork: django, flask, aiohttp, tornado, pyramid
-6. [database](database.md)
+1. [Metaclasses](./metaclass.md)
+2. [Memory Management, `__slots__`](./memory_managemnt.md)
+3. [mro detail, interface in python, mixins]()
+4. [build tools]()
+5. [package_managers](./package_manager.md)
+6. [enviorment](./enviorment_and_tools.md)
+7. [Concurrency](./concurancy.md) and [library](#concurrency-and-parallelism)
+8. [testing](./testing.md) and [library](#testing-and-quality-assurance)
+9. lean framwork: django, flask, aiohttp, tornado, pyramid, [library](#web-development) and [networking](#networking-and-asynchronous-programming)
+10. [database](database.md) and [library](#database-interaction)
+11. [data_visulization](some.md) and [library](#data-science)
+12. [gui](some.md) and [pyqt and tkinter library](#graphical-user-interfaces-guis)
+13. [Cryptography and Security](some.md) and [library](#cryptography-and-security)
+14. [ctype](ctype.md): for using c++ code in python
+15. **cython**: study source code for better understanding
+
+## python new verstion
+1. python 3.10
+2. python 3.11
 
 
 
+# Python Libraries and Tools
 
-## Modules Need To Know
-- **Core Python Libraries**: 
-   - [`itertools`](./_dump_/itertools.md)
-   - ( [`json `](./_dump_/json.md) or `pickle` )
-   -  `os`, `sys`, `shutil`, `subprocess`,
-   -  `functool`,
-   -  `collections`,
-   -  `pathlib`, 
-   -  `logging`,
-   -  (`argparse` or `click`),
-   -  `rich`, `color`.
+## Core Python Libraries (Essentials)
+- **`itertools`**: Tools for efficient looping, such as permutations and combinations.
+- **`json` or `pickle`**: 
+  - **json**: Parse and generate JSON data.
+  - **pickle**: Serialize and deserialize Python objects.
+- **`os`, `sys`, `pathlib`**: For file and directory operations (**os**, **pathlib**) and system-specific parameters (**sys**).
+- **`time`, `datetime`**: 
+  - **time**: Work with timestamps.
+  - **datetime**: Manipulate dates and times.
+- **`random`**: Generate random numbers and make random choices.
+- **`collections`**: High-performance container datatypes like **Counter**, **deque**, and **defaultdict**.
+- **`functools`**: Tools for higher-order functions (e.g., **lru_cache**, **partial**).
+- **`logging`**: For logging messages across modules.
+- **`argparse` or `click`** *(choose one)*:
+  - **argparse**: Create command-line interfaces.
+  - **click**: Simplified command-line interface creation.
+- **`rich`** *(optional)*: For pretty-printing, markdown rendering, and logging in terminals.
+- **`shutil`** *(optional)*: High-level file operations like copying and moving files.
+- **`subprocess`** *(optional)*: Run external processes and commands.
 
-- **Graphical User Interfaces (GUIs)**: 
-   - [`Tkinter`](./_dump_/tkinter.md),
-   - `PyQt`,
-   - `streamlit`
-   - `pygame`
-   - `pyopengl`
+## Graphical User Interfaces (GUIs)
+- **`Tkinter`**: Built-in library for basic desktop GUI applications.
+- **`PyQt` or `PySide`**: Feature-rich libraries for building advanced GUIs.
+- **`streamlit`** **(optional)**: For creating browser-based apps for data visualization or dashboards.
+- **`pygame`** **(optional)**: For 2D game development.
+- **`pyopengl`** **(optional)**: Interface to OpenGL for rendering 3D graphics.
 
-- **Testing and Quality Assurance**:
-   - `unittest`
-   - `pytest`
-   - `mock`.
+## Testing and Quality Assurance
+- **`unittest`**: Built-in framework for unit testing.
+- **`pytest`**: Advanced testing framework with plugins.
+- **`mock`** **(optional)**: Mock objects and test interactions.
 
-- **Cryptography and Security**
-   - `cryptography`
-   - `hashlib`
-   - `secrets`.
 
-- **data science**:
-   - `Pandas`
-   - `NumPy`
-   - `Seaborn`
+## Cryptography and Security
+- **`cryptography`**: Robust encryption, decryption, and hashing.
+- **`hashlib`**: Hashing algorithms like SHA and MD5.
+- **`secrets`**: Generate secure random numbers and tokens.
 
-- **Concurrency and Parallelism**:
-   - `threading`
-   - `multiprocessing`, 
-   - `concurrent.futures`
+## Data Science
+- **`Pandas`**: Data manipulation and analysis library.
+- **`NumPy`**: High-performance numerical computing.
+- **`Seaborn`**, **`Matplotlib`** **(optional)**: Statistical data visualization built on top of Matplotlib.
 
-- **Web Development**:
-   - `Flask`
-   - `Django`
-   - `Tornado`
-   - `FastAPI`
-   - `Requests`
-   - `aiohttp`.
+## Concurrency and Parallelism
+- **`threading`**: Run threads for multitasking.
+- **`multiprocessing`**: Run processes for parallel computing.
+- **`concurrent.futures`**: High-level concurrency for threads and processes.
 
-- **Networking and Asynchronous Programming**:
-   - `asyncio`
-   - `WebSocket`
-   - `Socket`
-   - `BeautifulSoup` or `Scrapy`)
-   - `pyautogui`.
+## Web Development
+- **`Flask`**: Lightweight framework for building web applications.
+- **`Django`**: Full-stack web development framework.
+- **`Requests`**: Simplify HTTP requests (GET, POST, etc.).
+- **`FastAPI`** **(optional)**: High-performance API creation using Python's `asyncio`.
+- **`aiohttp`**, **asyncpy** **(optional)**: For asynchronous HTTP requests.
 
-- **Database Interaction**:
-   - `SQLAlchemy`
-   - `SQLite3`
-   - `Django ORM`
-   - `PyMongo`
-   - `json`
-   - `yaml`
-   - `csv`
-   - `protobuf`
-   - `msgpack`
+## Networking and Asynchronous Programming
+- **`asyncio`**: For asynchronous programming (e.g., coroutines, event loops).
+- **`socket`**: Work with low-level network sockets.
+- **`websockets`** **(optional)**: Handle WebSocket connections.
+- **`BeautifulSoup`** **(optional)**: Parse and scrape HTML/XML documents.
+- **`Scrapy`** **(optional)**: Framework for advanced web scraping.
 
-- **other**: 
-   - `re`
-   - [`platform`](./_dump_/platform.md),
-   - `watchdog`
-   - `cProfile`
-   - `Numba`
-   - `Cython`
-   - `Pillow`
-   - `Pydantic`
-   - `ConfigParser`
-   - `OpenCV`
-   - `Docker`
-   - `gunicorn`
-   - `fabric`
-   - `ctype`.
+---
+
+## Database Interaction
+- **`SQLite3`**: Built-in library for working with SQLite databases.
+- **`csv`**, **`json`**, **`yaml`**: Work with different data serialization formats.
+- **`SQLAlchemy`** *(optional)*: Object-relational mapper (ORM) for database interaction.
+- **`Django ORM`** *(optional)*: ORM used within Django.
+- **`PyMongo`** *(optional)*: Interface for MongoDB.
+
+---
+
+## Miscellaneous Libraries
+- **`re`**: Regular expression operations.
+- **`platform`** *(optional)*: Retrieve system and hardware information.
+- **`cProfile`** *(optional)*: Profile and optimize Python code.
+- **`Pillow`** *(optional)*: Image processing and manipulation.
+- **`OpenCV`** *(optional)*: Computer vision and image processing.
+- **`ConfigParser`** *(optional)*: Work with configuration files.
+- **`Numba`** *(optional)*: Speed up Python code using JIT compilation.
+- **`Docker`** *(optional)*: Manage and deploy containerized applications.
+
+---
+
+## Notes:
+- Items marked as **(optional)** can be skipped if not needed for your use case.
+- Advanced sections are focused on specialized topics and projects.
