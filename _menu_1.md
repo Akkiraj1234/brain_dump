@@ -2,6 +2,7 @@
 
 Here's a breakdown of topics at each level and suggestions on areas you can explore further:
 **[`back`](./_menu_.md)**
+
 ## Beginner Topics
 You seem to have covered all of these already:
 - ~~**Data Types**: `Integers`, `floats`, `strings`, `lists`, `tuples`, `sets`, `dictionaries`, `bytarrya`, `bytes`, `memoryview`.~~

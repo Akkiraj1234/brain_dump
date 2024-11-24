@@ -1,3 +1,4 @@
+**[`back`](./_menu_.md)**
 # All Build-in funtion in python
 there are all build in python function and dunder
 
@@ -83,7 +84,9 @@ there are all build in python function and dunder
 - `locals()`: Returns the current local symbol table as a dictionary.
 - `help()`: Invokes the built-in help system.
 - `repr()`: The object for which you want to get the string representation. call __repr__ method of object.
-- [`__import__()`](#importname-globalsnone-localsnone-fromlist-level0-in-python-quick-notes): The name of the module you want to import
+- [`__import__()`]
+- `mro()`: a method to get mro hiracy of a class
+  (#importname-globalsnone-localsnone-fromlist-level0-in-python-quick-notes): The name of the module you want to import
 
   
 ## Set and Frozen Set Functions

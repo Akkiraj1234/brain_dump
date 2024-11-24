@@ -1,5 +1,13 @@
 # python menu
-1. [Beginner Level](./_menu_1.md)
+1. [Beginner Level](./beginner.md)
+2. [simple consept and defination](./consept_and_defination.md)
+3. [Data Types](./data_types.md)
+4. [keywords](./keywords.md)
+5. [operators](./operators.md)
+6. [Build in function](./build-in-function.md)
+7. [dunder methods](./dunder_methods.md)
+8. [comerhension and teronary](./comerhension.md)
+9. 
 
 
 
