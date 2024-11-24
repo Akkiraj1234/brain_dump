@@ -9,7 +9,7 @@ Here's a breakdown of topics at each level and suggestions on areas you can expl
 You have already covered these well:
 
 
-- ~~**Basic GUI Development**: tkinter and PyQt.~~
+
 - ~~**Networking with Requests**: Basic HTTP requests, API calls.~~
 - ~~**Web Scraping**: Using BeautifulSoup and Scrapy for extracting data from web pages.~~
 - ~~**CLI Application Development**: Building command-line tools using libraries like argparse and click.~~
