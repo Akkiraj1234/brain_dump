@@ -10,7 +10,7 @@
 9. [decorators](./decorators.md)
 10. [iterators and genrators](./iterators.md)
 11. [oops, modules](./oops.md)
-12. [build-tools](./build.tools.md)
+12. [build-tools](./build_tools.md)
 
 ## python menu - advanced and master
 1. [Metaclasses](./metaclass.md)
