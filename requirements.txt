@@ -1,0 +1,2 @@
+platformdirs==4.3.6
+yapf==0.43.0
