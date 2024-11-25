@@ -2,6 +2,13 @@
 
 Welcome to the **Brain Dump**, your ultimate resource for learning and mastering **Python**, **C++**, and other essential programming concepts. This repository is designed to provide a structured, comprehensive, and practical guide, covering everything you need as a developer, from fundamental concepts to advanced tools.
 
+## content
+1. [python](/python-dump/_content_.md) 
+2. [c++](/c++_dump/_content_.md)
+3. [other](/others/_content_.md)
+  
+happy learning :)
+
 ---
 
 ## **📚 Repository Goals**
