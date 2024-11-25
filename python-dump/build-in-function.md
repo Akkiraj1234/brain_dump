@@ -1,4 +1,4 @@
-**[`back`](./_menu_.md)**
+**[`back`](./_content_.md)**
 # All Build-in funtion in python
 there are all build in python function and dunder
 

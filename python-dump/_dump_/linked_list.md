@@ -1,3 +1,5 @@
+**[`back`](./_content_.md)**
+
 # Linked Lists and List Nodes
 
 Linked lists are a fundamental data structure in computer science that are used to store a `sequence of elements.`
