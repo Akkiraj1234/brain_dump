@@ -6,6 +6,7 @@ This guide introduces essential tools for managing and enhancing Python projects
 
 
 1. **Project Management**
+   - **`Poetry`**:  dependency management and project packaging tool.
    - **`pyproject.toml`**: Central configuration for build tools.
 
 2. **Static Typing**
