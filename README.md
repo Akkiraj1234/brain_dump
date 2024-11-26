@@ -173,12 +173,6 @@ We welcome contributions! If you'd like to add new topics, fix errors, or enhanc
 
 ---
 
-## 📜 License
-
-This repository is licensed under the [MIT License](LICENSE). Feel free to use and share it!
-
----
-
 ## 📧 Contact
 
 If you have questions, feedback, or suggestions, feel free to reach out:
