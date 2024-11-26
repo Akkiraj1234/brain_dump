@@ -9,6 +9,10 @@ Welcome to the **Brain Dump**, your ultimate resource for learning and mastering
   
 happy learning :)
 
+## License
+This repository is licensed under a [Custom License](./LICENSE.md). Please read the terms before using the content.
+
+
 ---
 
 ## **📚 Repository Goals**
@@ -63,6 +67,15 @@ python Python/markdown_renderer.py
 
 ### 4. Contribute or Customize
 - Feel free to fork this repository, add your own notes, or enhance the features!
+
+## Support My Work ❤️
+
+This repository is completely free to help others learn Python, from beginner to mastery level. If this resource helps you land a job, build a project, or grow in any way, please consider supporting my work.
+
+Your donations will help me continue creating more resources and keep this project alive for everyone! 🙌
+
+[☕ Donate Here] -> will be available in future
+
 
 ## **🧠 Topics Covered**
 
