@@ -12,24 +12,26 @@
 9. [decorators](./decorators.md)
 10. [iterators and genrators](./iterators.md)
 11. [oops, modules](./oops.md)
-12. [build-tools](./build_tools.md)
+12. [Metaclasses](./metaclass.md)
+    
 
 ## python menu - advanced and master
-1. [Metaclasses](./metaclass.md)
-2. [Memory Management, `__slots__`](./memory_managemnt.md)
-3. [mro detail, interface in python, mixins]()
-4. [build tools]()
-5. [package_managers](./package_manager.md)
-6. [enviorment](./enviorment_and_tools.md)
-7. [Concurrency](./concurancy.md) and [library](#concurrency-and-parallelism)
-8. [testing](./testing.md) and [library](#testing-and-quality-assurance)
-9. lean framwork: django, flask, aiohttp, tornado, pyramid, [library](#web-development) and [networking](#networking-and-asynchronous-programming)
-10. [database](database.md) and [library](#database-interaction)
-11. [data_visulization](some.md) and [library](#data-science)
-12. [gui](some.md) and [pyqt and tkinter library](#graphical-user-interfaces-guis)
-13. [Cryptography and Security](some.md) and [library](#cryptography-and-security)
-14. [ctype](ctype.md): for using c++ code in python
-15. **cython**: study source code for better understanding
+1. [build-tools](./build_tools.md)
+2. [packaging_library](./packaging.md)
+3. [packaging_application](./application_dev.md)
+4. [package_managers](./package_manager.md)
+5. [enviorment](./enviorment_and_tools.md)
+6. [Memory Management, `__slots__`](./memory_managemnt.md)
+7. [mro detail, interface in python, mixins]()
+8.  [Concurrency](./concurancy.md) and [library](#concurrency-and-parallelism)
+9.  [testing](./testing.md) and [library](#testing-and-quality-assurance)
+10. lean framwork: django, flask, aiohttp, tornado, pyramid, [library](#web-development) and [networking](#networking-and-asynchronous-programming)
+11. [database](database.md) and [library](#database-interaction)
+12. [data_visulization](some.md) and [library](#data-science)
+13. [gui](some.md) and [pyqt and tkinter library](#graphical-user-interfaces-guis)
+14. [Cryptography and Security](some.md) and [library](#cryptography-and-security)
+15. [ctype](ctype.md): for using c++ code in python
+16. **cython**: study source code for better understanding
 
 ## python new verstion
 1. python 3.10
