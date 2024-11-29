@@ -16,11 +16,14 @@
     
 
 ## python menu - advanced and master
-1. [build-tools](./build_tools.md)
-2. [packaging_library](./packaging.md)
-3. [packaging_application](./application_dev.md)
-4. [package_managers](./package_manager.md)
-5. [enviorment](./enviorment_and_tools.md)
+1. [package_managers](./package_manager.md)
+2. [enviorment](./enviorment_and_tools.md)
+3. [build-tools](./build_tools.md)
+4. [poetry](./poetry.md)
+4. [PyPI deployment](./packaging.md)
+5. [Executable deployment](./application_dev.md)
+6. [Web server deployment](./web_server_deployment.md)
+
 6. [Memory Management, `__slots__`](./memory_managemnt.md)
 7. [mro detail, interface in python, mixins]()
 8.  [Concurrency](./concurancy.md) and [library](#concurrency-and-parallelism)

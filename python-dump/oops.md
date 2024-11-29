@@ -20,7 +20,7 @@ so in simple work oops is a programing pardigma that uses object and classes in 
   
 ## class 
 A class is a blueprint for creating objects that contain attributes (data) and methods (functions). 
-- contain **attributes**, **methods**, and **duner methods**..
+- contain **attributes**, **methods**, and **dunder methods**..
 - All Python classes implicitly inherit from the built-in object class if no parent class is specified.
 - Protects the internal data of a class from being directly accessed or modified.
 - `self` Refers to the instance of the class calling the method. pass as first parameter in method.
