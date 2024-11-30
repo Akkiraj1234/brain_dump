@@ -13,19 +13,18 @@
 10. [iterators and genrators](./iterators.md)
 11. [oops, modules](./oops.md)
 12. [Metaclasses](./metaclass.md)
+13. [mro detail, interface in python, mixins]()
+14. [Memory Management, `__slots__`](./memory_managemnt.md)
     
 
 ## python menu - advanced and master
-1. [package_managers](./package_manager.md)
-2. [enviorment](./enviorment_and_tools.md)
-3. [build-tools](./build_tools.md)
-4. [poetry](./poetry.md)
-4. [PyPI deployment](./packaging.md)
-5. [Executable deployment](./application_dev.md)
-6. [Web server deployment](./web_server_deployment.md)
-
-6. [Memory Management, `__slots__`](./memory_managemnt.md)
-7. [mro detail, interface in python, mixins]()
+1. [some_important_consepts](./some_imporatant_consepts.md)
+2. [package_managers](./package_manager.md)
+3. [build tools](./build_tools.md)
+4. [poetry_and_other_package_manegers](./poetry.md)
+5. [PyPI deployment](./packaging.md)
+6. [Executable deployment](./application_dev.md)
+7. [Web server deployment](./web_server_deployment.md)
 8.  [Concurrency](./concurancy.md) and [library](#concurrency-and-parallelism)
 9.  [testing](./testing.md) and [library](#testing-and-quality-assurance)
 10. lean framwork: django, flask, aiohttp, tornado, pyramid, [library](#web-development) and [networking](#networking-and-asynchronous-programming)
