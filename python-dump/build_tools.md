@@ -11,7 +11,7 @@ This guide introduces essential tools for managing and enhancing Python projects
 
 2. **Static Typing**
    - **`typing`**: Built-in Python module for type hints.
-   - **`mypy`**: A static type checker for Python.
+   - **`pyright`**: A static type checker for Python.
 
 3. **Code Formatting**
    - **[`yapf`](#yapf-yet-another-python-formatter)**: Automatic code formatter.
@@ -180,3 +180,20 @@ black --target-version py38 your_file.py
 3. Enable format-on-save: In VSCode, search for Editor: Format On Save in settings and enable it.
 
 ### u can also set it in Pre-commit Hook (automate Black in git workflows) and CI/CD Integration:
+
+
+## Source Distributions vs Wheels
+:ref:`pip` can install from either :term:`Source Distributions (sdist) <Source
+Distribution (or "sdist")>` or :term:`Wheels <Wheel>`, but if both are present
+on PyPI, pip will prefer a compatible :term:`wheel <Wheel>`. You can override
+pip`s default behavior by e.g. using its :ref:`--no-binary
+<pip:install_--no-binary>` option.
+
+:term:`Wheels <Wheel>` are a pre-built :term:`distribution <Distribution
+Package>` format that provides faster installation compared to :term:`Source
+Distributions (sdist) <Source Distribution (or "sdist")>`, especially when a
+project contains compiled extensions.
+
+If :ref:`pip` does not find a wheel to install, it will locally build a wheel
+and cache it for future installs, instead of rebuilding the source distribution
+in the future.
