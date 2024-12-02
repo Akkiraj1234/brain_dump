@@ -38,6 +38,8 @@
 ## python new verstion
 1. python 3.10
 2. python 3.11
+3. python 3.12
+4. python 3.13
 
 
 

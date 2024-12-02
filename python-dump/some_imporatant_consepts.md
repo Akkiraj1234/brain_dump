@@ -1,5 +1,5 @@
 # Important Concepts
-Before diving into these topics, it is essential to understand the following foundational concepts:
+Before diving into these topics..
 
 1. [package_managers](./package_manager.md)
 2. [environment](./enviorment_and_tools.md)
@@ -9,6 +9,8 @@ Before diving into these topics, it is essential to understand the following fou
     - [Executable deployment](./application_dev.md)
     - [Web server deployment](./web_server_deployment.md)
 5. **[go back](./_content_.md)**
+
+it is essential to understand the following foundational concepts:
 
 ## content
 - [Important Concepts](#important-concepts)
@@ -40,7 +42,7 @@ The site-packages directory is a designated folder within your Python installati
 
 ### Module
 A module is a single file containing Python code. It can define functions, classes, and variables, and it may include runnable code. 
-- Any Python file (.py) is a module.
+- Any Python file (.py) is a module whom we can reuse after import.
 
 ### libraries
 Libraries, also referred to as packages, are collections of pre-written code that you can use to streamline development. They can be installed via tools like pip and are stored in your system's site-packages directory. Libraries can either be:
