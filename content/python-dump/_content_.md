@@ -15,7 +15,6 @@
 12. [Metaclasses](./metaclass.md)
 13. [mro detail, interface in python, mixins]()
 14. [Memory Management, `__slots__`](./memory_managemnt.md)
-    
 
 ## python menu - advanced and master
 1. [some_important_consepts](./some_imporatant_consepts.md)

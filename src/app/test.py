@@ -1,4 +1,19 @@
-text = """
+import os
+
+
+def test_md_binary_view():
+    path = os.path.abspath(os.path.dirname(__file__))
+    os.system("cls")
+    with open(f"{path}\\test.md","br") as lol:
+        print(next(lol))
+        print(next(lol))
+        print(next(lol))
+        print(next(lol))
+        print(next(lol))
+        print(lol.__sizeof__())
+
+    
+demo_markdown_text = """
 1    \33[1m\33[38;2;255;184;77mtopics======================================================\33[0m
 2       1. \33[34moops\33[0m
 3       2. \33[34mmodules\33[0m
@@ -43,4 +58,3 @@ text = """
 42   ===============================================================
 43   author : @akkiraj
 """
-print(text)
