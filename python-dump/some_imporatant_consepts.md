@@ -18,8 +18,8 @@ it is essential to understand the following foundational concepts:
  - [System's site-packages Directory](#systems-site-packages-directory)
  - [Module](#module)
  - [libraries](#libraries)
- - [dependencies](#dependencies)
  - [Package](#package)
+ - [dependencies](#dependencies)
  - [Dependency Hell](#dependency-hell)
  - [Requirements File](#requirements-file)
  - [Understanding Semantic Versioning](#understanding-semantic-versioning)
@@ -54,12 +54,12 @@ Libraries, also referred to as packages, are collections of pre-written code tha
 - External: Installed from repositories like PyPI.
 - Custom: Code you write and reuse across multiple projects.
 
-### dependencies
-Dependencies are external libraries or packages that your project relies on but did not create. They are installed from global repositories (e.g., PyPI) and play a critical role in your project's functionality. Your project's success is dependent on these libraries being available and properly configured.
-
 ### Package 
-A package is a collection of related Python modules organized in a directory structure. It often contains an __init__.py file, which marks the directory as a Python package and can include metadata, settings, or initialization code. A package can include multiple libraries and sub-packages.
+A package is a collection of related Python modules organized in a directory structure. It often contains an `__init__.py` file, which marks the directory as a Python package and can include metadata, settings, or initialization code. A package can include multiple libraries and sub-packages.
 -  All libraries can be considered packages if they are bundled as distributable modules. However, not all packages are libraries. Packages can include additional resources (e.g., data files, assets) and sub-packages.
+
+### dependencies
+Dependencies are external libraries or packages that your project relies on but not persent in the current directory. They are installed from global repositories (e.g., PyPI) and play a critical role in your project's functionality. Your project's success is dependent on these libraries being available and properly configured.
 
 ### Dependency Hell
 Dependency Hell occurs when conflicting versions of dependencies make it impossible to install or run your project.

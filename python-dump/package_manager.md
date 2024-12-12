@@ -110,6 +110,10 @@ A package build is the process of preparing a Python project for distribution by
     ```bash
     pip install --upgrade package-name
     ```
+- show info about a package:
+    ```bash
+    pip show <package_name>
+    ```
 - Learn how to upgrade pip:
     ```bash
     python -m pip install --upgrade pip
@@ -136,7 +140,7 @@ To install pip, follow these steps:
 **requirements.txt** is a file that lists all the Python libraries your project depends on, along with their versions.
 
 ### Why Use requirements.txt?
-1. **For Collaboration**: EEnsures everyone uses the same library versions, avoiding compatibility issues.
+1. **For Collaboration**: Ensures everyone uses the same library versions, avoiding compatibility issues.
 
 2. **For Deployment**: Makes it easier to set up the project on a server or another computer.
 
@@ -253,3 +257,57 @@ This structured workflow will help you maintain clean and organized Python proje
 1. pypi : https://pypi.org
 2. test-pypi : https://test.pypi.org
 3. pip-download : https://bootstrap.pypa.io/get-pip.py
+
+
+<!--
+### 1. What is a Library?
+- A **library** is a collection of pre-written code that you can use to perform common tasks without writing the code from scratch.
+- Example: Libraries like `requests` for HTTP requests or `numpy` for numerical computations.
+
+### 2. Why Install Libraries?
+- Saves time and effort.
+- Provides tested and reliable solutions for common problems.
+- Helps you focus on your application's core logic instead of reinventing the wheel.
+
+### 3. What is a Package?
+- A **package** is a collection of modules (Python files) grouped together to provide specific functionality.
+- It can also include metadata like the author, version, and dependencies.
+
+### 4. What is a Package Manager?
+- A **package manager** is a tool that helps you install, upgrade, and manage Python libraries and packages.
+- Example: `pip` is Python's default package manager.
+
+### 5. Why Use a Package Manager?
+- Easily install libraries from online repositories like PyPI.
+- Manage dependencies and versions to avoid conflicts.
+- Automate updates and uninstallation.
+
+### 6. What is PyPI?
+- **PyPI (Python Package Index)** is an online repository where Python packages and libraries are hosted.
+- Think of it as a "store" for Python tools and libraries.
+
+### 5. What is pip?
+- `pip` is the tool used to install and manage Python packages from PyPI.
+
+### 6. What is a Setup Tool?
+- A **setup tool** helps package and distribute your Python code so others can install and use it.
+- Example: `setuptools` is commonly used to define how your package should be built and shared.
+
+### 7. What is a Virtual Environment?
+- A **virtual environment** is a separate space to install libraries and dependencies for a specific project.
+- It prevents conflicts between projects by keeping dependencies isolated.
+
+### 8. Why Use Virtual Environments?
+- Keeps projects independent.
+- Avoids breaking system-wide Python installations.
+- Ensures reproducibility for others using your project.
+
+### 9. Relationship Between PyPI and pip
+- PyPI:
+    - A repository where packages are hosted and indexed.
+    - Acts as the "storehouse" of Python libraries.
+- pip:
+    - A client tool used to fetch and install packages from PyPI.
+    - It's like a "delivery service" that brings packages from PyPI to your project.
+
+-->

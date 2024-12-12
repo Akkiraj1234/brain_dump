@@ -1,2 +1,9 @@
+black==24.10.0
+click==8.1.7
+colorama==0.4.6
+mypy-extensions==1.0.0
+packaging==24.2
+pathspec==0.12.1
+pipdeptree==2.24.0
 platformdirs==4.3.6
 yapf==0.43.0
