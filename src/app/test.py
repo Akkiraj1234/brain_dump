@@ -1,15 +1,61 @@
+
+
+# path = os.path.abspath(os.path.dirname(__file__))
+
+# main_text = []
+# with open(f"{path}\\test.md","br") as markdown:
+    
+#     parse = markdown_parse(markdown)
+#     text = inteprate_markdown(parser)
+#     main_text += text
+    
+# print(main_text)
+
+
+# so i should have 3 component
+# 1. that will parse the markdowon to middle code and buffer
+# 2. that will work on the buffer to handle text
+# 3. that will create the text from the buffer
+
+# the 3 step component
+
+
+# the term buffer i used here to define like for example 
+# ## lets asume this is markdown text with heading 2
+
+# the markdown parser will work on the first line and create buffer like this
+# {"type":"heading", "level":2, "text": "lets asume this is markdown text with heading 2"}
+
+# and the 2. component will handele the buffer to work with this data and pass this to its managable comonent like heading_manager(level=2,text="...", width = 200)
+
+# that will return the text and that text will be the one that going to print on terminal 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import os
+import cProfile
 
 
 def test_md_binary_view():
     path = os.path.abspath(os.path.dirname(__file__))
     os.system("cls")
     with open(f"{path}\\test.md","br") as lol:
-        print(next(lol))
-        print(next(lol))
-        print(next(lol))
-        print(next(lol))
-        print(next(lol))
+        for line in lol:
+            print(line)
         print(lol.__sizeof__())
 
     
@@ -58,3 +104,66 @@ demo_markdown_text = """
 42   ===============================================================
 43   author : @akkiraj
 """
+
+from customparser import TextStyle
+import os
+
+print("performing text styling checkup")
+text1 = [
+        {"style": ["faint", "underline"], "text": "hello this world"},
+        {"style": ["bold", "italic"], "text": " and my name is akki "},
+        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
+        {""}
+    ]
+text2 = [
+        {"style": ["faint", "underline"], "text": "hello this world"},
+        {"style": ["bold", "italic"], "text": " and my name is akki "},
+        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
+        {""}
+    ]
+text3 = [
+        {"style": ["faint", "underline"], "text": "hello this world"},
+        {"style": ["bold", "italic"], "text": " and my name is akki "},
+        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
+        {""}
+    ]
+text4 = [
+        {"style": ["faint", "underline"], "text": "hello this world"},
+        {"style": ["bold", "italic"], "text": " and my name is akki "},
+        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
+        {""}
+    ]
+text5 = [
+        {"style": ["faint", "underline"], "text": "hello this world"},
+        {"style": ["bold", "italic"], "text": " and my name is akki "},
+        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
+        {""}
+    ]
+text6 = [
+        {"style": ["faint", "underline"], "text": "hello this world"},
+        {"style": ["bold", "italic"], "text": " and my name is akki "},
+        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
+        {"style":["bold","double_underline", "overline"], "text":"  hello world again"}
+    ]
+text7 = [
+        {"style": ["faint", "underline"], "text": "hello this world"},
+        {"style": ["bold", "italic"], "text": " and my name is akki "},
+        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
+        {"style":["bold", "overline"], "text":"  hello world"}
+    ]
+text8 = [
+        {"style": ["faint", "underline"], "text": "hello this world"},
+        {"style": ["bold", "italic"], "text": " and my name is akki "},
+        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
+        {"style":["double_underline", "overline","bold"], "text":"  hello world again"}
+    ]
+
+texts = [text1, text2, text3, text4, text5, text6, text7, text8]
+text_style = TextStyle()
+
+def check_text_style():
+    os.system("cls")
+    for text in texts:
+        print(text_style(text))
+        
+cProfile.run('check_text_style()', sort="time")

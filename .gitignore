@@ -1,2 +1,5 @@
 /brain
 /ignore
+/src/app/__pycache__
+/src/app/__pycache__/__main__.cpython-311.pyc
+
