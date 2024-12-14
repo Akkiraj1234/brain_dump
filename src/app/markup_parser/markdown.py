@@ -12,5 +12,9 @@ after custom parser what i need ?
 3. so number 2 things will only work is to parse the text into terminal
 
 """
+from typing import TextIO
 
 
+class markdown:
+    def __init__(self, file:TextIO):
+        pass

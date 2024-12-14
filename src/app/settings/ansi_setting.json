@@ -1,0 +1,13 @@
+{
+    "text_formating": {
+        "reset": "0",
+        "bold": "1",
+        "faint": "2",
+        "italic": "3",
+        "underline": "4",
+        "strikethrough": "9",
+        "inline": "47;30",
+        "overline": "53",        
+        "double_underline": "21"
+    }
+}

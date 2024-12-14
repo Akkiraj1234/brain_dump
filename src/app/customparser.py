@@ -1,7 +1,8 @@
 from typing import List, Dict, Any
 
+
 class TextStyle:
-    def __init__(self, ansi_code:dict|None = None):
+    def __init__(self, ansi_code: Dict[str,str]|None = None):
         self.ansi_code = ansi_code or {
             "reset": "0",
             "bold": "1",
@@ -40,15 +41,19 @@ class TextStyle:
         1. Use ANSI escape codes as your default formatting system.
             a. Try to enable ANSI using SetConsoleMode with ctypes (on Windows 10+).
             b. If ANSI fails, fallback to Win32 Console APIs for compatibility with older versions.
-            c. Terminfo-based handling in the future. for legesy system
             
         2. LRU Cache (for Precomputed ANSI Codes): Great addition for optimizing repeated style combinations in the future.
         
-        3. _load_color_and_all_from_somewhere.
+        3. [done] _load_color_and_all_from_somewhere.
         
         # not now
         1. will make it compatible with sixel graphics for terminal like kitty
+        2. Terminfo-based handling in the future. for legesy system
         """
+
+
+
+
 
 
 
@@ -57,28 +62,13 @@ class TextStyle:
 
 # Example usage
 if __name__ == "__main__":
-    text = [
-        {"style": ["faint", "underline"], "text": "hello this world"},
-        {"style": ["bold", "italic"], "text": " and my name is akki "},
-        {"style": ["inline", "bold", "strikethrough", "italic"], "text": "and this is **bold** text"},
-        {"style": ["underline","faint","inline", "bold", "strikethrough", "italic"], "text": "\nand this is **bold** text"}
-    ]
-    ansi_code_set = {
-        "reset": "0",
-        "bold": "2",
-        "faint": "1",
-        "italic": "9",
-        "underline": "47;30",
-        "strikethrough": "3",
-        "inline": "4",
-        "overline": "53",        #does not work in window 10 cmd
-        "double_underline": "21" #does not work in window 10 cmd
+    heading = {
+        "type": "un", "data": {
+            "type": "heading", "data": {
+                "type": "text", "data": [{"style": [], "text": "so i was thinking to add this info in my "},]
+            }
+        }
     }
-
-    text_style = TextStyle(None)
-    print(text_style(text))
-
-
 
 
 

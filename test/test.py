@@ -64,9 +64,9 @@ demo_markdown_text = """
 2       1. \33[34moops\33[0m
 3       2. \33[34mmodules\33[0m
 4       3. \33[1;31mgo back\33[0m
-5    \33[30m-----------------------------------------------------------------\33[0m
-6    |\33[48;2;244;162;97m                  \33[0m\33[1m\33[1;30;47m   python OOps Consepts   \33[0m\33[48;2;244;162;97m                   \33[0m|
-7    \33[30m=================================================================\33[0m
+5    |\33[30m-------------------------------------------------------------\33[0m|
+6    |\33[48;2;244;162;97m                \33[0m\33[1m\33[1;30;47m   python OOps Consepts   \33[0m\33[48;2;244;162;97m                   \33[0m|
+7    |\33[30m=============================================================\33[0m|
 8    | so in simple work oops is a programing pardigma that uses   |
 9    | object and classes in programing which allow inheritance,   |
 10   | polymorphsms, encapsulation, abstraction is called oops     |
@@ -105,8 +105,13 @@ demo_markdown_text = """
 43   author : @akkiraj
 """
 
-from customparser import TextStyle
-import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)),"src"))
+print(sys.path)
+
+from app.customparser import TextStyle
+
 
 print("performing text styling checkup")
 text1 = [
@@ -167,3 +172,4 @@ def check_text_style():
         print(text_style(text))
         
 cProfile.run('check_text_style()', sort="time")
+print(demo_markdown_text,flush=True)
