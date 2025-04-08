@@ -110,7 +110,7 @@ import sys
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(__file__)),"src"))
 print(sys.path)
 
-from app.customparser import TextStyle
+from app.customparser import TextNode
 
 
 print("performing text styling checkup")
@@ -164,7 +164,7 @@ text8 = [
     ]
 
 texts = [text1, text2, text3, text4, text5, text6, text7, text8]
-text_style = TextStyle()
+text_style = TextNode()
 
 def check_text_style():
     os.system("cls")

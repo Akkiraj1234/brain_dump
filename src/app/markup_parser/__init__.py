@@ -17,6 +17,9 @@ def get_parser_by_extension(extension) -> object|None:
         'txt': 'rst',  
     }.get(extension, None)
 
+    if canonical_extension is None:
+        return None
+
     return supported_formats.get(canonical_extension)
 
 

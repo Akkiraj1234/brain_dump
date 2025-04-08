@@ -1,7 +1,7 @@
 from typing import List, Dict, Any
 
 
-class TextStyle:
+class TextNode:
     def __init__(self, ansi_code: Dict[str,str]|None = None):
         self.ansi_code = ansi_code or {
             "reset": "0",
@@ -48,9 +48,27 @@ class TextStyle:
         
         # not now
         1. will make it compatible with sixel graphics for terminal like kitty
-        2. Terminfo-based handling in the future. for legesy system
+        2. Terminfo-based handling in the future. for legacy system
         """
 
+class HeadingNode:
+    
+    def __init__(self):
+        pass
+
+
+
+
+
+
+
+
+
+class List_Node:
+    def __init__(self):
+        pass
+
+    pass
 
 
 

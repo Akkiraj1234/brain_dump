@@ -4,6 +4,6 @@ from os import (
 )
 
 
-def check_ansi_compatiblity(self):
+def check_ansi_compatibility(self):
     return True
     # will write this later

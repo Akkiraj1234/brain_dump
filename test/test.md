@@ -1,7 +1,7 @@
 # My Markdown Test File
 
 > # hello and 
-> we are thingsing to have **nice** talk with unordered
+> we are thinking to have **nice** talk with unordered
 
 
 hello my name is akki
