@@ -57,9 +57,10 @@
 - **`collections`**: High-performance container datatypes like **Counter**, **deque**, and **defaultdict**.
 - **`functools`**: Tools for higher-order functions (e.g., **lru_cache**, **partial**).
 - **`logging`**: For logging messages across modules.
-- **`argparse` or `click`** *(choose one)*:
-  - **argparse**: Create command-line interfaces.
-  - **click**: Simplified command-line interface creation.
+- **`argparse`, `click`** and [`curses`](/content/python-dump/_libraries_/curses/curses.md):
+  - **argparse**: foundation for CLI tools
+  - **curses**: master layout, input, full control
+  - **urwid**: if you wanna build apps faster with less boilerplate
 - **`rich`** *(optional)*: For pretty-printing, markdown rendering, and logging in terminals.
 - **`shutil`** *(optional)*: High-level file operations like copying and moving files.
 - **`subprocess`** *(optional)*: Run external processes and commands.
