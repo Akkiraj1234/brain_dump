@@ -89,6 +89,8 @@
 - **`Seaborn`**, **`Matplotlib`** **(optional)**: Statistical data visualization built on top of Matplotlib.
 
 ## Concurrency and Parallelism
+- [**`GIL (Global Interpreter Lock)`**](./concurancy.md#gil-global-interpreter-lock): Prevents multiple native threads from executing Python bytecode
+- [**`asyncio`**](./_libraries_/asyncio/index.md): concurrent code using async/await in single thread.
 - **`threading`**: Run threads for multitasking.
 - **`multiprocessing`**: Run processes for parallel computing.
 - **`concurrent.futures`**: High-level concurrency for threads and processes.
