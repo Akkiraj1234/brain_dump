@@ -1,8 +1,21 @@
 {
     "cSpell.words": [
+        "cursesmodule",
+        "cursse",
         "customparser",
+        "endwin",
         "headingnode",
+        "initscr",
+        "isendwin",
+        "kwargs",
         "mkdn",
+        "nlines",
+        "putwin",
+        "resetty",
+        "savetty",
+        "scrollok",
+        "setscrreg",
+        "setupterm",
         "sixel",
         "Terminfo"
     ]

@@ -2,7 +2,7 @@
 
 This document serves as a practical guide to understanding how Python's curses functions work, helping you identify which function suits which task and when to use them. But before diving in, make sure to read the foundational theory covered in [cursse.md](cursse.md). That doc explains all the essential concepts — like the curses buffer system, virtual vs. physical screens, and how curses actually manages the terminal — so you’re not just memorizing functions but truly understanding how everything works under the hood.
 
-## First of All, Let’s Clear a Few Things
+<h2>1. First of All, Let’s Clear a Few Things</h2>
 
 - ✅ `ncurses` is **thread-safe** if it’s built that way.
 - ⚠️ Python curses isn’t GIL-safe — if you go multithreaded and touch curses from more than 1 thread
@@ -10,10 +10,9 @@ This document serves as a practical guide to understanding how Python's curses f
 
 > And if you don’t understand something… well, amm, you can search it 🙂. Stack Overflow exists for a reason — I can’t cover everything, even if I want to 🫠.
 
-## 2. Resources I’m Using (and You Should Too)
+<h2>2. Resources I’m Using (and You Should Too)</h2>
 
-> I got tired of Stack Overflow's hide-n-seek and read the actual source code.
->  Yeah, I'm that kinda nerd (0-0)
+ I got tired of Stack Overflow's hide-n-seek and read the actual source code. Yeah, I'm that kinda nerd (0-0)
 
 - 📚 [Python Curses Docs](https://docs.python.org/3/library/curses.html#curses.window.get_wch)
 - 🧠 [ncurses Source Code](https://github.com/mirror/ncurses/blob/master/ncurses/base)
@@ -21,7 +20,7 @@ This document serves as a practical guide to understanding how Python's curses f
 - 🧠🐍 [CPython `_cursesmodule.c`](https://github.com/python/cpython/blob/main/Modules/_cursesmodule.c)
 
 
-## 3. What’s the Goal?
+<h2>3. What’s the Goal</h2>
 
 I’m gonna cover **every `curses` function** available in Python.
  Also, gonna highlight functions that **exist in `ncurses` but are missing in Python**.
@@ -34,13 +33,10 @@ There’ll be **two parts**:
 > I’m breaking it into categories to make life easier.
 >  So yeah — sit tight, buckle up, and enjoy this *cursed* ride 🤘
 
----
+------
 
 # Tables of content
 - [Curses Functions \& Coding](#curses-functions--coding)
-  - [First of All, Let’s Clear a Few Things](#first-of-all-lets-clear-a-few-things)
-  - [2. Resources I’m Using (and You Should Too)](#2-resources-im-using-and-you-should-too)
-  - [3. What’s the Goal?](#3-whats-the-goal)
 - [Tables of content](#tables-of-content)
 - [Curses Functions Short Notes](#curses-functions-short-notes)
   - [1. Initialization \& Termination Routines](#1-initialization--termination-routines)
@@ -51,6 +47,14 @@ There’ll be **two parts**:
   - [6. Color and Appearance Management](#6-color-and-appearance-management)
   - [7. Terminal Capabilities \& Environment](#7-terminal-capabilities--environment)
   - [8. Window Management \& Operations](#8-window-management--operations)
+- [Detailed Overview: Initialization \& Termination Routines](#detailed-overview-initialization--termination-routines)
+  - [🗂️ Table of Contents](#️-table-of-contents)
+  - [`initscr()` and `endwin()`](#initscr-and-endwin)
+    - [`initscr()`](#initscr)
+    - [`endwin()`](#endwin)
+  - [`slk_init()`, `ripoffline()`, `use_env()`, `filter()`, `newterm()`, `set_term()`, and `delscreen()`](#slk_init-ripoffline-use_env-filter-newterm-set_term-and-delscreen)
+
+---
 
 # Curses Functions Short Notes
 
@@ -58,128 +62,128 @@ A complete list of all 146+ Python `curses` functions, neatly organized by categ
 
 
 
-## 1. Initialization & Termination Routines
+## 1. [Initialization & Termination Routines](#detailed-overview-initialization--termination-routines)
 
 Functions that set up and tear down the curses environment, including saving/restoring terminal states and initializing low‐level terminal information.
 
-| number | name                                     | description                                                  |
-| ------ | ---------------------------------------- | ------------------------------------------------------------ |
-| 1.     | `curses.initscr()`                       | Initializes the curses system and returns a window object representing the whole screen. |
-| 2.     | `curses.endwin()`                        | Ends curses mode and returns the terminal to its normal operating state. |
-| 3.     | `curses.def_prog_mode()`                 | Saves the current terminal mode (program state) so it can be restored later. |
-| 4.     | `curses.def_shell_mode()`                | Saves the shell’s mode, allowing the terminal to be reset when leaving curses. |
-| 5.     | `curses.reset_prog_mode()`               | Restores the terminal to the saved program mode.             |
-| 6.     | `curses.reset_shell_mode()`              | Restores the terminal to the saved shell mode.               |
-| 7.     | `curses.savetty()`                       | Saves the current tty (teletype) settings of the terminal.   |
-| 8.     | `curses.resetty()`                       | Restores the tty settings saved by savetty().                |
-| 9.     | `curses.setupterm(term=None, fd=-1)`     | Initializes low-level terminal settings for the specified terminal type. |
-| 10.    | `curses.wrapper(func, /, *args, kwargs)` | A convenience function that initializes curses, runs your function, and then cleans up automatically. |
-| 11.    | `curses.isendwin()`                      | Returns whether endwin() has been called (i.e. if curses mode has ended). |
-| 12.    | `curses.is_term_resized(nlines, ncols)`  | Checks if the terminal’s size has changed compared to provided dimensions. |
-| 13.    | `curses.update_lines_cols()`             | Updates curses’ internal record of the terminal’s dimensions. |
+| number | name                                              | description                                                  |
+| ------ | ------------------------------------------------- | ------------------------------------------------------------ |
+| 1.     | [`curses.initscr()`](#initscr)                    | Initializes the curses system and returns a window object representing the whole screen. |
+| 2.     | [`curses.endwin()`](#endwin)                      | Ends curses mode and returns the terminal to its normal operating state. |
+| 3.     | `curses.wrapper(func, /, *args, kwargs)`          | A convenience function that initializes curses, runs your function, and then cleans up automatically. |
+| 4.     | `curses.def_prog_mode()`                          | Saves the current terminal mode (program state) so it can be restored later. |
+| 5.     | `curses.def_shell_mode()`                         | Saves the shell’s mode, allowing the terminal to be reset when leaving curses. |
+| 6.     | `curses.reset_prog_mode()`                        | Restores the terminal to the saved program mode.             |
+| 7.     | `curses.reset_shell_mode()`                       | Restores the terminal to the saved shell mode.               |
+| 8.     | `curses.savetty()`                                | Saves the current tty (teletype) settings of the terminal.   |
+| 9.     | `curses.resetty()`                                | Restores the tty settings saved by savetty().                |
+| 10.    | `curses.setupterm(term=None, fd=-1)`              | Initializes low-level terminal settings for the specified terminal type. |
+| 11.    | `curses.isendwin()`                               | Returns whether endwin() has been called (i.e. if curses mode has ended). |
+| 12.    | `curses.is_term_resized(nlines, ncols)`           | Checks if the terminal’s size has changed compared to provided dimensions. |
+| 13.    | `curses.update_lines_cols()`                      | Updates curses’ internal record of the terminal’s dimensions. |
 
 
 ## 2. Input Handling Routines
 
 Functions that manage keyboard input and related buffering, including modes for character processing and push-back of characters.
 
-| number | name                       | description                                                  |
-| ------ | -------------------------- | ------------------------------------------------------------ |
-| 1.     | `curses.echo()`            | Enables echoing of input characters to the screen.           |
-| 2.     | `curses.noecho()`          | Disables the automatic echoing of typed characters.          |
-| 3.     | `curses.cbreak()`          | Disables line buffering so characters are available immediately (without waiting for Enter). |
-| 4.     | `curses.nocbreak()`        | Restores line buffering (ends cbreak mode).                  |
-| 5.     | `curses.raw()`             | Puts the terminal into raw mode so that input is passed through without any preprocessing. |
-| 6.     | `curses.noraw()`           | Exits raw mode, restoring normal input processing.           |
-| 7.     | `curses.halfdelay(tenths)` | Sets a half-delay mode where getch() waits for a fixed tenths-of-a-second interval before timing out. |
-| 8.     | `curses.flushinp()`        | Flushes (clears) any typeahead or unread input in the input buffer. |
-| 9.     | `curses.ungetch(ch)`       | Pushes a character back onto the input queue, to be read again by getch(). |
-| 10.    | `curses.unget_wch(ch)`     | Pushes a wide character back onto the input stream.          |
-| 11.    | `curses.has_key(ch)`       | Checks if the terminal recognizes a specific key code.       |
-| 12.    | `curses.keyname(k)`        | Returns a string representation of a given key code.         |
-| 13.    | `curses.typeahead(fd)`     | Specifies a file descriptor to check for typeahead (pending input) before blocking for user input. |
+| number | name                                              | description                                                  |
+| ------ | ------------------------------------------------- | ------------------------------------------------------------ |
+| 1.     | `curses.echo()`                                   | Enables echoing of input characters to the screen.           |
+| 2.     | `curses.noecho()`                                 | Disables the automatic echoing of typed characters.          |
+| 3.     | `curses.cbreak()`                                 | Disables line buffering so characters are available immediately (without waiting for Enter). |
+| 4.     | `curses.nocbreak()`                               | Restores line buffering (ends cbreak mode).                  |
+| 5.     | `curses.raw()`                                    | Puts the terminal into raw mode so that input is passed through without any preprocessing. |
+| 6.     | `curses.noraw()`                                  | Exits raw mode, restoring normal input processing.           |
+| 7.     | `curses.halfdelay(tenths)`                        | Sets a half-delay mode where getch() waits for a fixed tenths-of-a-second interval before timing out. |
+| 8.     | `curses.flushinp()`                               | Flushes (clears) any typeahead or unread input in the input buffer. |
+| 9.     | `curses.ungetch(ch)`                              | Pushes a character back onto the input queue, to be read again by getch(). |
+| 10.    | `curses.unget_wch(ch)`                            | Pushes a wide character back onto the input stream.          |
+| 11.    | `curses.has_key(ch)`                              | Checks if the terminal recognizes a specific key code.       |
+| 12.    | `curses.keyname(k)`                               | Returns a string representation of a given key code.         |
+| 13.    | `curses.typeahead(fd)`                            | Specifies a file descriptor to check for typeahead (pending input) before blocking for user input. |
 
 
 ## 3. Mouse Handling Routines
 
 Functions dedicated to mouse event processing and configuration.
 
-| number | name                                     | description                                                  |
-| ------ | ---------------------------------------- | ------------------------------------------------------------ |
-| 1.     | `curses.getmouse()`                      | Retrieves a mouse event (click, release, or movement) from the input queue. |
-| 2.     | `curses.mouseinterval(interval)`         | Sets the maximum time (in milliseconds) between press and release events to consider them as a click. |
-| 3.     | `curses.mousemask(mousemask)`            | Sets the mouse event mask to specify which mouse events the program is interested in. |
-| 4.     | `curses.ungetmouse(id, x, y, z, bstate)` | Pushes a mouse event back into the input queue, allowing it to be re-read later. |
+| number | name                                              | description                                                  |
+| ------ | ------------------------------------------------- | ------------------------------------------------------------ |
+| 1.     | `curses.getmouse()`                               | Retrieves a mouse event (click, release, or movement) from the input queue. |
+| 2.     | `curses.mouseinterval(interval)`                  | Sets the maximum time (in milliseconds) between press and release events to consider them as a click. |
+| 3.     | `curses.mousemask(mousemask)`                     | Sets the mouse event mask to specify which mouse events the program is interested in. |
+| 4.     | `curses.ungetmouse(id, x, y, z, bstate)`          | Pushes a mouse event back into the input queue, allowing it to be re-read later. |
 
 
 ## 4. Output & Screen Update Routines
 
 Functions that control screen output, update the display, and manage output delays.
 
-| number | name                      | description                                                  |
-| ------ | ------------------------- | ------------------------------------------------------------ |
-| 1.     | `curses.delay_output(ms)` | Inserts a delay in output by waiting a specified number of milliseconds. |
-| 2.     | `curses.doupdate()`       | Refreshes the physical screen to match all virtual screen changes (batch update). |
-| 3.     | `curses.napms(ms)`        | Pauses execution for a specified number of milliseconds, useful for timing in animations. |
-| 4.     | `curses.putp`             | Outputs a terminal capability string (often used with terminfo strings) to the terminal. |
-| 5.     | `curses.qiflush([flag])`  | Controls whether to flush queued output when an interrupt occurs (interrupt flush control). |
+| number | name                                              | description                                                  |
+| ------ | ------------------------------------------------- | ------------------------------------------------------------ |
+| 1.     | `curses.delay_output(ms)`                         | Inserts a delay in output by waiting a specified number of milliseconds. |
+| 2.     | `curses.doupdate()`                               | Refreshes the physical screen to match all virtual screen changes (batch update). |
+| 3.     | `curses.napms(ms)`                                | Pauses execution for a specified number of milliseconds, useful for timing in animations. |
+| 4.     | `curses.putp`                                     | Outputs a terminal capability string (often used with terminfo strings) to the terminal. |
+| 5.     | `curses.qiflush([flag])`                          | Controls whether to flush queued output when an interrupt occurs (interrupt flush control). |
 
 
 ## 5. Mode & Behavior Settings
 
 Functions that change the terminal’s operational modes and behavior for processing input/output.
 
-| number | name                       | description                                                  |
-| ------ | -------------------------- | ------------------------------------------------------------ |
-| 1.     | `curses.nl()`              | Enables newline translation; a newline on input is translated to carriage return and linefeed on output. |
-| 2.     | `curses.nonl()`            | Disables the newline translation behavior.                   |
-| 3.     | `curses.noqiflush()`       | Prevents automatic flushing of output when certain keys (like interrupt) are pressed. |
-| 4.     | `curses.meta(flag)`        | Enables or disables 8-bit input mode, allowing use of meta (high-bit) characters. |
-| 5.     | `curses.filter()`          | Enables filter mode, which is used by programs that accept only one line of input. |
-| 6.     | `curses.killchar()`        | Returns the terminal’s current kill character (used to discard input). |
-| 7.     | `curses.erasechar()`       | Returns the terminal’s current erase character (used for backspacing or deletion). |
-| 8.     | `curses.getsyx()`          | Gets the current virtual cursor position (y, x) without moving it. |
-| 9.     | `curses.setsyx(y, x)`      | Sets the virtual cursor position, affecting where the next output will occur. |
-| 10.    | `curses.get_escdelay()`    | Retrieves the current delay (in milliseconds) before an ESC key is recognized as a standalone key. |
-| 11.    | `curses.set_escdelay(ms)`  | Sets the delay before an ESC key is interpreted as a distinct key press. |
-| 12.    | `curses.get_tabsize()`     | Returns the current tab spacing (number of spaces a tab represents). |
-| 11.    | `curses.set_tabsize(size)` | Sets the tab spacing to a specified size.                    |
-| 12.    | `curses.unctrl(ch)`        | Returns a printable representation of control characters (e.g., converting Ctrl characters to caret notation). |
+| number | name                                              | description                                                  |
+| ------ | ------------------------------------------------- | ------------------------------------------------------------ |
+| 1.     | `curses.nl()`                                     | Enables newline translation; a newline on input is translated to carriage return and linefeed on output. |
+| 2.     | `curses.nonl()`                                   | Disables the newline translation behavior.                   |
+| 3.     | `curses.noqiflush()`                              | Prevents automatic flushing of output when certain keys (like interrupt) are pressed. |
+| 4.     | `curses.meta(flag)`                               | Enables or disables 8-bit input mode, allowing use of meta (high-bit) characters. |
+| 5.     | `curses.filter()`                                 | Enables filter mode, which is used by programs that accept only one line of input. |
+| 6.     | `curses.killchar()`                               | Returns the terminal’s current kill character (used to discard input). |
+| 7.     | `curses.erasechar()`                              | Returns the terminal’s current erase character (used for backspacing or deletion). |
+| 8.     | `curses.getsyx()`                                 | Gets the current virtual cursor position (y, x) without moving it. |
+| 9.     | `curses.setsyx(y, x)`                             | Sets the virtual cursor position, affecting where the next output will occur. |
+| 10.    | `curses.get_escdelay()`                           | Retrieves the current delay (in milliseconds) before an ESC key is recognized as a standalone key. |
+| 11.    | `curses.set_escdelay(ms)`                         | Sets the delay before an ESC key is interpreted as a distinct key press. |
+| 12.    | `curses.get_tabsize()`                            | Returns the current tab spacing (number of spaces a tab represents). |
+| 11.    | `curses.set_tabsize(size)`                        | Sets the tab spacing to a specified size.                    |
+| 12.    | `curses.unctrl(ch)`                               | Returns a printable representation of control characters (e.g., converting Ctrl characters to caret notation). |
 
 
 ## 6. Color and Appearance Management
 
 Functions that manage colors, color pairs, and visual attributes for text display.
 
-| number | name                                       | description                                                  |
-| ------ | ------------------------------------------ | ------------------------------------------------------------ |
-| 1.     | `curses.can_change_color()`                | Checks if the terminal supports redefining its color definitions. |
-| 2.     | `curses.color_content(color_number)`       | Returns the red, green, and blue intensities (RGB) of a given color number. |
-| 3.     | `curses.color_pair(pair_number)`           | Returns an attribute value representing the specified color pair for use in output. |
-| 4.     | `curses.has_colors()`                      | Determines if the terminal supports color display.           |
-| 5.     | `curses.has_extended_color_support()`      | Checks whether the terminal supports an extended range of colors beyond the basic set. |
-| 6.     | `curses.init_color(color_number, r, g, b)` | Redefines a color’s RGB components for terminals that allow color changes. |
-| 7.     | `curses.init_pair(pair_number, fg, bg)`    | Initializes a color pair with a foreground and background color. |
-| 8.     | `curses.pair_content(pair_number)`         | Returns the foreground and background colors associated with a given pair number. |
-| 9.     | `curses.pair_number(attr)`                 | Extracts the color pair number from an attribute value.      |
-| 10.    | `curses.start_color()`                     | Initializes the color functionality within curses.           |
-| 11.    | `curses.use_default_colors()`              | Allows the program to use the terminal’s default background and foreground colors. |
+| number | name                                              | description                                                  |
+| ------ | ------------------------------------------------- | ------------------------------------------------------------ |
+| 1.     | `curses.can_change_color()`                       | Checks if the terminal supports redefining its color definitions. |
+| 2.     | `curses.color_content(color_number)`              | Returns the red, green, and blue intensities (RGB) of a given color number. |
+| 3.     | `curses.color_pair(pair_number)`                  | Returns an attribute value representing the specified color pair for use in output. |
+| 4.     | `curses.has_colors()`                             | Determines if the terminal supports color display.           |
+| 5.     | `curses.has_extended_color_support()`             | Checks whether the terminal supports an extended range of colors beyond the basic set. |
+| 6.     | `curses.init_color(color_number, r, g, b)`        | Redefines a color’s RGB components for terminals that allow color changes. |
+| 7.     | `curses.init_pair(pair_number, fg, bg)`           | Initializes a color pair with a foreground and background color. |
+| 8.     | `curses.pair_content(pair_number)`                | Returns the foreground and background colors associated with a given pair number. |
+| 9.     | `curses.pair_number(attr)`                        | Extracts the color pair number from an attribute value.      |
+| 10.    | `curses.start_color()`                            | Initializes the color functionality within curses.           |
+| 11.    | `curses.use_default_colors()`                     | Allows the program to use the terminal’s default background and foreground colors. |
 
 ## 7. Terminal Capabilities & Environment
 
 Functions that query and manipulate low-level terminal characteristics and capabilities.
 
-| number | name                        | description                                                  |
-| ------ | --------------------------- | ------------------------------------------------------------ |
-| 1.     | `curses.baudrate()`         | Returns the current baud rate (speed) of the terminal connection. |
-| 2.     | `curses.longname()`         | Provides a detailed name or description of the terminal type. |
-| 3.     | `curses.termattrs()`        | Returns a set of attributes (like bold, underline) that the terminal supports. |
-| 4.     | `curses.termname()`         | Returns the terminal type name as defined by the terminfo database. |
-| 5.     | `curses.tigetflag(capname)` | Retrieves a boolean (flag) capability from the terminfo database for the terminal. |
-| 6.     | `curses.tigetnum(capname)`  | Retrieves a numeric capability (e.g., number of colors) from terminfo. |
-| 7.     | `curses.tigetstr(capname)`  | Retrieves a string capability from terminfo (such as cursor movement sequences). |
-| 8.     | `curses.tparm(str[, ...])`  | Processes a parameterized terminal string by substituting given values into its placeholders. |
-| 9.     | `curses.use_env(flag)`      | Controls whether curses should respect the LINES and COLUMNS environment variables when setting terminal dimensions. |
+| number | name                                              | description                                                  |
+| ------ | ------------------------------------------------- | ------------------------------------------------------------ |
+| 1.     | `curses.baudrate()`                               | Returns the current baud rate (speed) of the terminal connection. |
+| 2.     | `curses.longname()`                               | Provides a detailed name or description of the terminal type. |
+| 3.     | `curses.termattrs()`                              | Returns a set of attributes (like bold, underline) that the terminal supports. |
+| 4.     | `curses.termname()`                               | Returns the terminal type name as defined by the terminfo database. |
+| 5.     | `curses.tigetflag(capname)`                       | Retrieves a boolean (flag) capability from the terminfo database for the terminal. |
+| 6.     | `curses.tigetnum(capname)`                        | Retrieves a numeric capability (e.g., number of colors) from terminfo. |
+| 7.     | `curses.tigetstr(capname)`                        | Retrieves a string capability from terminfo (such as cursor movement sequences). |
+| 8.     | `curses.tparm(str[, ...])`                        | Processes a parameterized terminal string by substituting given values into its placeholders. |
+| 9.     | `curses.use_env(flag)`                            | Controls whether curses should respect the LINES and COLUMNS environment variables when setting terminal dimensions. |
 
 ## 8. Window Management & Operations
 
@@ -258,4 +262,65 @@ Methods (typically called on window objects) that create, modify, and manage win
 | 69.    | `window.touchline(start, count[, changed])`       | Marks a range of lines as modified so that they will be refreshed on the next update. |
 | 70.    | `window.touchwin()`                               | Marks the entire window as modified, forcing a full refresh. |
 
+---
+
+# Detailed Overview: Initialization & Termination Routines 
+
+This section gives a **deep look** into how the curses library initializes and terminates a terminal session.
+
+## 🗂️ Table of Contents
+1. [`initscr()` and `endwin()`](#initscr-and-endwin)
+2. [`slk_init()`, `ripoffline()`, `use_env()`, `filter()`, `newterm()`, `set_term()`, and `delscreen()`](#slk_init-ripoffline-use_env-filter-newterm-set_term-and-delscreen)
+
+---
+
+## `initscr()` and `endwin()`
+
+### `initscr()`
+
+`initscr()` is usually the **very first** routine to call when setting up a terminal for curses — especially in Python.  
+However, in **C/C++**, other setup routines like `slk_init()`, `ripoffline()`, `use_env()`, and `newterm()` might come before it.
+
+Here's what `initscr()` does internally:
+
+- Initializes a thread lock so no other part of the app can modify screen settings during setup.
+- Checks if `initscr()` was already called before — if yes, it just returns the old `stdscr`.
+- If not, it:
+  - Gets the `TERM` environment variable. If it's missing, it defaults to `'unknown'`.
+  - Initializes the terminal by calling `newterm()` — this creates data structures for `stdscr`.
+  - Takes a snapshot of the original terminal state using `def_shell_mode()`.
+  - Calls `refresh()` to clear the screen.
+  - Calls `def_prog_mode()` to save the new curses-mode state.
+- Frees any temporary memory, unlocks the thread, and returns `stdscr`.
+
+📖 [Official docs for `initscr`](https://invisible-island.net/ncurses/man/curs_initscr.3x.html)
+
+---
+
+### `endwin()`
+
+In **Python curses**, `endwin()` is typically called at the **end of the program** to shut down curses mode and return to the normal shell view.
+
+But in **C curses**, it's a bit more advanced. It doesn't necessarily end your whole program — just the curses terminal session.
+
+This is because in C, you can manage **multiple terminal sessions** using `newterm()` and `set_term()` — each with its own `stdscr`. So, `endwin()` only ends the current one.
+
+> ⚠️ Note: `endwin()` doesn't free all memory. You need to call `delscreen()` to delete the terminal data structures created by `newterm()`.
+
+But in **Python**, there's only one screen, so `newterm()` or `delscreen()` don’t even exist — Python handles cleanup when curses ends.
+
+Here’s what `endwin()` actually performs:
+
+- Resets terminal colors to default (`default color pair`) and clears remaining lines.
+- Makes cursor visible again via `curs_set()`.
+- Exits **cursor addressing mode** using `exit_ca_mode`.
+- Restores the shell mode via `reset_shell_mode()`.
+
+📖 [See docs for `endwin`](https://invisible-island.net/ncurses/man/curs_initscr.3x.html)
+
+---
+
+## `slk_init()`, `ripoffline()`, `use_env()`, `filter()`, `newterm()`, `set_term()`, and `delscreen()`
+
+🛠️ *(This section is coming soon. Will explain how each of these setup or manage terminal modes before or after `initscr()`.)*
 
