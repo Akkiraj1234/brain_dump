@@ -1,0 +1,4 @@
+# BrainDump Project TODO
+
+[ ] Read and rewrite this page in our style: https://wiki.python.org/moin/GlobalInterpreterLock  
+    → Output goes in: content/python-dump/concurancy.md

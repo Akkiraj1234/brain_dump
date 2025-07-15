@@ -3,6 +3,8 @@
         "akhand",
         "Akkiraj",
         "asyncio",
+        "contextvars",
+        "coro",
         "cursesmodule",
         "cursse",
         "customparser",

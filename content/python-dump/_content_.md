@@ -94,6 +94,7 @@
 - **`threading`**: Run threads for multitasking.
 - **`multiprocessing`**: Run processes for parallel computing.
 - **`concurrent.futures`**: High-level concurrency for threads and processes.
+- **`trio`** (modern & structured): Safer async with structured concurrency design.
 
 ## Web Development
 - **`Flask`**: Lightweight framework for building web applications.
