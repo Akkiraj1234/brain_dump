@@ -25,17 +25,19 @@
 | [`asyncio.gather(*aws, return_exceptions=False)`](#asynciogatheraws-return_exceptionsfalse) | Schedule and wait for things concurrently. | 
 | [`asyncio.wait_for(aw, timeout)`](#asynciowait_foraw-timeout) | Run with a timeout. |
 | [`asyncio.shield(aw)`](#asyncioshieldaw) | Shield from cancellation. |
-| [`async asyncio.wait(aws, *, timeout=None, return_when=asyncio.ALL_COMPLETED)`](#async-asynciowaitaws--timeoutnone-return_whenasyncioall_completed) | Monitor for completion. |
-| [] | Run with a timeout. Useful in cases when wait_for is not suitable. |
-
-
-
+| [`asyncio.wait(aws, *, timeout=None, return_when=asyncio.ALL_COMPLETED)`](#asynciowaitaws--timeoutnone-return_whenasyncioall_completed) | Monitor for completion. |
+| [`asyncio.timeout(delay)`](#asynciotimeoutdelay) | a context manager use to set deadline with time in sec |
+| [`asyncio.timeout_at(when)`](#asynciotimeout_atwhen) | a context manager use to set deadline but with absolute time according to loop.time() |
+| [`asyncio.to_thread(func, /, *args, **kwargs)`](#asyncioto_threadfunc--args-kwargs) | run a blocking code in separate thread from asyncio code. |
+| [`asyncio.run_coroutine_threadsafe(coro, loop)`](#asynciorun_coroutine_threadsafecoro-loop) | run a asyncio code in separate thread in thread safe way |
+| [`asyncio.as_completed(aws, *, timeout=None)`](#asyncioas_completedaws--timeoutnone) | run task in asyncio order and return iterator of aws as they finish |
 
 ## Class index
 | class                | defincation               | methods         |
 |----------------------|---------------------------|-----------------|
 | [`asyncio.Runner(*, debug=None, loop_factory=None)`](#asynciorunner-debugnone-loop_factorynone) | A context manager that simplifies multiple async function calls. | `run(coro, *, context=None)`, `get_loop()`, `close()` |
-|
+| [`asyncio.Timeout(when: Optional[float])`](#asynciotimeoutwhen-optionalfloat) | A context manager that use to set timeout for a task or coro with absolute time  | `when()`,  `reschedule(when)`, `expired()` |
+
 
 
 
@@ -129,183 +131,250 @@ await asyncio.sleep(0)
 
 ## `asyncio.gather(*aws, return_exceptions=False)`
 **`awaitable`**\
-Run awaitable objects in the aws sequence concurrently.
+Runs all the given awaitable objects **concurrently** (it automatically wraps them into Tasks).
+If all awaitables complete successfully without errors, it returns a list of their results in the **same order** as provided.
 
-If any awaitable in aws is a coroutine, it is automatically scheduled as a Task.
+- If an error happens and `return_exceptions = False`:  
+  The exception is **raised immediately** to the coroutine that's currently awaiting `gather()`, and no result is returned. and **The rest of the coroutines will still run unless cancelled manually**.
 
-If all awaitables are completed successfully, the result is an aggregate list of returned values. The order of result values corresponds to the order of awaitables in aws.
+- If an error happens and `return_exceptions = True`:  
+  The exception is **captured** and returned in the result list, in the position of the coroutine that failed.  
+  Other tasks continue running normally.
 
-If return_exceptions is False (default), the first raised exception is immediately propagated to the task that awaits on gather(). Other awaitables in the aws sequence won’t be cancelled and will continue to run.
+- If `gather()` itself is **cancelled**, then **all** the awaitables are cancelled.
 
-If return_exceptions is True, exceptions are treated the same as successful results, and aggregated in the result list.
+- If any task/future inside `gather()` is cancelled individually, a `CancelledError` is raised for that task.  
+  The final result will still be returned (even if `return_exceptions` is `False`).
 
-If gather() is cancelled, all submitted awaitables (that have not completed yet) are also cancelled.
+### Parameters
+- `*aws`: List of **awaitable** objects (coroutines, Tasks, or Futures).
+- `return_exceptions`: If `True`, return exceptions instead of raising them. Default is `False`.
 
-If any Task or Future from the aws sequence is cancelled, it is treated as if it raised CancelledError – the gather() call is not cancelled in this case. This is to prevent the cancellation of one submitted Task/Future to cause other Tasks/Futures to be cancelled.
+```python
+async def main():
+    results = await asyncio.gather(say_hi(), say_bye())
+    print(results)  # ➜ ['Hi', 'Bye']
+```
 
-Return a future aggregating results from the given coroutines/futures.
-
-
-    Coroutines will be wrapped in a future and scheduled in the event
-    loop. They will not necessarily be scheduled in the same order as
-    passed in.
-
-    All futures must share the same event loop.  If all the tasks are
-    done successfully, the returned future's result is the list of
-    results (in the order of the original sequence, not necessarily
-    the order of results arrival).  If *return_exceptions* is True,
-    exceptions in the tasks are treated the same as successful
-    results, and gathered in the result list; otherwise, the first
-    raised exception will be immediately propagated to the returned
-    future.
-
-    Cancellation: if the outer Future is cancelled, all children (that
-    have not completed yet) are also cancelled.  If any child is
-    cancelled, this is treated as if it raised CancelledError --
-    the outer Future is *not* cancelled in this case.  (This is to
-    prevent the cancellation of one child to cause other children to
-    be cancelled.)
-
-    If *return_exceptions* is False, cancelling gather() after it
-    has been marked done won't cancel any submitted awaitables.
-    For instance, gather can be marked done after propagating an
-    exception to the caller, therefore, calling ``gather.cancel()``
-    after catching an exception (raised by one of the awaitables) from
-    gather won't cancel any other awaitables.
+---
 
 ## `asyncio.wait_for(aw, timeout)`
 **`awaitable`**\
-Wait for the aw awaitable to complete with a timeout.
 
-If aw is a coroutine it is automatically scheduled as a Task.
+Waits for the given awaitable (`aw`) to finish within a time limit (`timeout`). return output.
 
-timeout can either be None or a float or int number of seconds to wait for. If timeout is None, block until the future completes.
+- If `timeout=None`, it waits as long as needed.
+- If the task takes longer than `timeout`, it’s **cancelled** and raises `TimeoutError`.
+- It waits for the task to finish cancelling, so actual wait time might be slightly longer.
+- If the coroutine **catches its cancellation** and returns a value, that value is returned instead of an error.
+- If the parent task is cancelled, the inner awaited task is also cancelled.
 
-If a timeout occurs, it cancels the task and raises TimeoutError.
+✅ Good for setting timeouts for long tasks.
 
-To avoid the task cancellation, wrap it in shield().
+### Parameters
+- `aw`: The coroutine or future to wait for.
+- `timeout`: How long to wait in seconds (`int`, `float`, or `None`).
 
-The function will wait until the future is actually cancelled, so the total wait time may exceed the timeout. If an exception happens during cancellation, it is propagated.
+```python 
+async def main():
+    try:
+        result = await asyncio.wait_for(slow_task(), timeout=1)
+        print("Result:", result)
+    except asyncio.TimeoutError:
+        print("⏰ Timed out!")
+```
 
-If the wait is cancelled, the future aw is also cancelled.
+---
 
-Wait for the single Future or coroutine to complete, with timeout.
-
-    Coroutine will be wrapped in Task.
-
-    Returns result of the Future or coroutine.  When a timeout occurs,
-    it cancels the task and raises TimeoutError.  To avoid the task
-    cancellation, wrap it in shield().
-
-    If the wait is cancelled, the task is also cancelled.
-
-    If the task suppresses the cancellation and returns a value instead,
-    that value is returned.
-
-    This function is a coroutine.
 
 ## `asyncio.shield(aw)`
 **`awaitable`**\
-Protect an awaitable object from being cancelled.
 
-If aw is a coroutine it is automatically scheduled as a Task.
+Protects an awaitable (`aw`) from being cancelled — even if the outer task gets cancelled.  
+(Still raises `CancelledError` at the *caller*, but not *inside* the task.)
 
-The statement:
+- If the outer coroutine is cancelled (e.g. user presses Ctrl+C), shield() raises CancelledError, but the inner coroutine keeps running safely.
+- From the inner coroutine’s view, nothing happened — it doesn’t get cancelled.
 
+> However, if the task cancels itself, shield() can’t stop that. and shield also got cancelled
+
+### Parameters
+- `aw`: the awaitable its takes
+
+```python
 task = asyncio.create_task(something())
-res = await shield(task)
-is equivalent to:
-
-res = await something()
-except that if the coroutine containing it is cancelled, the Task running in something() is not cancelled. From the point of view of something(), the cancellation did not happen. Although its caller is still cancelled, so the “await” expression still raises a CancelledError.
-
-If something() is cancelled by other means (i.e. from within itself) that would also cancel shield().
-
-If it is desired to completely ignore cancellation (not recommended) the shield() function should be combined with a try/except clause, as follows:
-
-Wait for a future, shielding it from cancellation.
-
-    The statement
-
-        task = asyncio.create_task(something())
+    try:
         res = await shield(task)
+    except CancelledError:
+        res = None
+```
 
-    is exactly equivalent to the statement
+---
 
-        res = await something()
+## `asyncio.wait(aws, *, timeout=None, return_when=asyncio.ALL_COMPLETED)` 
+**`awaitable`**
 
-    *except* that if the coroutine containing it is cancelled, the
-    task running in something() is not cancelled.  From the POV of
-    something(), the cancellation did not happen.  But its caller is
-    still cancelled, so the yield-from expression still raises
-    CancelledError.  Note: If something() is cancelled by other means
-    this will still cancel shield().
+Runs multiple Tasks or Futures concurrently and waits based on the condition provided.
+It returns two sets: `(done, pending)` — completed tasks and those still running.
 
-    If you want to completely ignore cancellation (not recommended)
-    you can combine shield() with a try/except clause, as follows:
+> 🚫 It does **NOT** raise `TimeoutError`.  
+> 🟡 Pending tasks are **not cancelled**, they keep running unless you cancel them manually.
 
-        task = asyncio.create_task(something())
-        try:
-            res = await shield(task)
-        except CancelledError:
-            res = None
+### Parameters
+- `aws`: A list/set of awaitables (Task or Future).
+- `timeout`: Time to wait in seconds (`int`, `float`, or `None`). If `None`, wait forever.
+- `return_when`: Condition that decides **when** to return:
+  - `asyncio.ALL_COMPLETED`: Wait until all tasks are done or cancelled.
+  - `asyncio.FIRST_COMPLETED`: Return as soon as **any** task is done.
+  - `asyncio.FIRST_EXCEPTION`: Return when **any** task raises an exception.  
+    If none raise errors, behaves like `ALL_COMPLETED`.
 
-    Save a reference to tasks passed to this function, to avoid
-    a task disappearing mid-execution. The event loop only keeps
-    weak references to tasks. A task that isn't referenced elsewhere
-    may get garbage collected at any time, even before it's
+### Notes
+- Tasks in `done` → finished, possibly with result or exception.
+- Tasks in `pending` → still running in the background.
 
-## `async asyncio.wait(aws, *, timeout=None, return_when=asyncio.ALL_COMPLETED)`
-**`awaitable`**\
-Run Future and Task instances in the aws iterable concurrently and block until the condition specified by return_when.
+```python
+done, pending = await asyncio.wait(aws, timeout=5)
+```
 
-The aws iterable must not be empty.
+---
 
-Returns two sets of Tasks/Futures: (done, pending).
+## `asyncio.timeout(delay)`
+**`awaitable context manager`**
 
-Usage:
+Returns an `asyncio.Timeout` context manager to limit how long to wait for a coroutine to finish.  
+If `delay=None`, no timeout is set (waits forever).
 
-done, pending = await asyncio.wait(aws)
-timeout (a float or int), if specified, can be used to control the maximum number of seconds to wait before returning.
+- Automatically cancels the task if it runs longer than the given time.
+- cancelling Tasks Raise `CancelledError` catch and converted to `TimeoutError`.
 
-Note that this function does not raise TimeoutError. Futures or Tasks that aren’t done when the timeout occurs are simply returned in the second set.
+### Parameters
+- `delay`: Seconds to wait (`float`, `int`, or `None`).
 
-return_when indicates when this function should return. It must be one of the following constants:
+```python
+async def main():
+    async with asyncio.timeout(10):
+        await long_running_task()
+```
 
-Constant
+---
 
-Description
+## `asyncio.timeout_at(when)`
+Same as asyncio.timeout(), but instead of a delay, you give it an absolute time
+(e.g., loop.time() + 5) to stop waiting.
 
-asyncio.FIRST_COMPLETED
-The function will return when any future finishes or is cancelled.
+### Parameters
+- `when`: Absolute deadline by loop.time (float or None).
 
-asyncio.FIRST_EXCEPTION
-The function will return when any future finishes by raising an exception. If no future raises an exception then it is equivalent to ALL_COMPLETED.
+```python
+async def main():
+    loop = get_running_loop()
+    deadline = loop.time() + 20
+    async with asyncio.timeout_at(deadline):
+        await long_running_task()
+```
 
-asyncio.ALL_COMPLETED
-The function will return when all futures finish or are cancelled.
+---
+
+## `asyncio.to_thread(func, /, *args, **kwargs)`
+Returns a **coroutine** that will run the given **blocking function** (`func`) in a separate **thread**, preventing the event loop from freezing.
+
+- The `to_thread()` function itself is **not awaitable** — it returns a coroutine which **you must `await`**.
+- Passes all `*args` and `**kwargs` to the target `func`.
+- Automatically shares the current `contextvars.Context` from the event loop to the new thread.
+
+### Parameters
+- `func`: The blocking function to run in a thread.
+- `*args`, `**kwargs`: Arguments passed to `func`.
+
+```python
+import asyncio, time
+
+def blocking_io():
+    print("Start IO:", time.strftime('%X'))
+    time.sleep(1)
+    print("Done IO:", time.strftime('%X'))
+
+async def main():
+    print("Main started:", time.strftime('%X'))
+    await asyncio.gather(
+        asyncio.to_thread(blocking_io),
+        asyncio.sleep(1)
+    )
+    print("Main done:", time.strftime('%X'))
+
+asyncio.run(main())
+```
+
+---
+
+## `asyncio.run_coroutine_threadsafe(coro, loop)`
+`thread-safe`  
+
+Used to run asyncio code from **another thread** (e.g., a `threading.Thread`).  
+This function **submits a coroutine** to run in a specific event loop from a different OS thread.
+> ✅ Thread-safe — safe to call from outside the event loop.
+
+- Returns a `concurrent.futures.Future` object (not an asyncio Future).
+- Use .result(timeout) to wait for its result.
+
+### Parameters
+- `coro`: The coroutine to run.
+- `loop`: The event loop where coro will be scheduled.
+
+### 🧠 Comparison:
+|               | `await coro` (inside async)  | `run_coroutine_threadsafe(...).result()` (from thread) |
+| ------------- | ---------------------------- | ------------------------------------------------------ |
+| Async context | ✅ Required                  | ❌ Not needed (used in threads)                        |
+| Blocks thread | ❌ No                        | ✅ Yes (but only your thread, not the loop)            |
+| Use case      | Inside `async def` functions | Inside normal `def`, like from `threading.Thread`      |
 
 
+```python
+import asyncio
+
+coro = asyncio.sleep(1, result=3)
+future = asyncio.run_coroutine_threadsafe(coro, loop)
+
+result = future.result(timeout=2)
+assert result == 3
+```
+
+---
+
+## `asyncio.as_completed(aws, *, timeout=None)`
+**`asyncio iterator`**
+
+Run multiple awaitables concurrently and get results **as they finish**, not in order.
+Returns an **iterator** that yields each completed awaitable one-by-one.
+
+- **`async for`**: yields original tasks (preserves identity).
+- **`for`**: yields wrapper coroutines (requires `await` to get result).
+
+### 📥 Parameters
+- `aws`: Iterable of awaitables (coroutines, Tasks, or Futures).
+- `timeout`: (Optional) Time in seconds to wait for **all** awaitables. Raises `TimeoutError` if exceeded.
 
 
+### ✅ Example: async for
 
+```python
 
+async def main():
+    ipv4 = asyncio.create_task(open_connection("127.0.0.1", 1))
+    ipv6 = asyncio.create_task(open_connection("::1", 2))
+    tasks = [ipv4, ipv6]
 
+    async for task in as_completed(tasks):
+        result = await task
+        print(result)
+```
 
+---
 
+##
 
-
-
-
-
-
-
-
-
-
-
-
-
+---
 
 ## `asyncio.Runner(*, debug=None, loop_factory=None)`
 
@@ -328,12 +397,45 @@ A **low-level context manager** used to manually create, run, and clean up an ev
 | `get_loop()`                  | Returns the internal event loop managed by the Runner. Useful if you need to manually schedule tasks or inspect the loop. |
 | `close()`                     | Finalizes async generators, shuts down the default executor, and releases any internal resources like context vars.        |
 
-And also includes: `__init__`, `__enter__`, `__exit__`, `__dict__`, `__weakref__` (used by Python internally).
+And also includes: `__init__`, `__aenter__`, `__aexit__`, `__dict__`, `__weakref__` (used by Python internally).
 
 ```python
 with asyncio.Runner() as runner:
     result = runner.run(my_coroutine())
 ```
 
-## `asyncio.timeout(delay)`
+---
 
+## `asyncio.Timeout(when: Optional[float])`
+**`Low-level async context manager`**
+
+Cancels long-running tasks when they go beyond the deadline (when).
+You shouldn’t use this directly — use timeout() or timeout_at() instead.
+> If timeout occurs, asyncio.CancelledError is converted to TimeoutError.
+
+### Parameters
+- `when`: **Absolute deadline in seconds** (loop.time() + x) or None.
+
+### Methods
+| Method             | Description                               |
+| ------------------ | ----------------------------------------- |
+| `when()`           | Returns the current deadline or `None`.   |
+| `reschedule(when)` | Change the timeout deadline.              |
+| `expired()`        | Returns `True` if the timeout has passed. |
+
+> Also includes internal methods: `__init__`, `__aenter__`, `__aexit__`, `__repr__`, `__dict__`, `__weakref__`, `__final__`.
+
+```python 
+async def main():
+    try:
+        async with asyncio.Timeout(loop.time() + 10):
+            await long_running_task()
+    except TimeoutError:
+        print("The long operation timed out.")
+
+    print("This will still run.")
+```
+
+---
+
+## `class asyncio.Task(coro, *, loop=None, name=None, context=None, eager_start=False)`
