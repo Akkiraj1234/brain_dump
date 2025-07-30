@@ -2,7 +2,7 @@
 
 > **Author** : Akhand Raj  
 > **GitHub** : [@Akkiraj1234](https://github.com/Akkiraj1234)  
-> **Date**   : 13 July 2025  
+> **Date**   : 30 July 2025  
 > **Status** : ⏳ Ongoing
 
 ---
@@ -10,43 +10,41 @@
 ## Topics
 1. [function index](#function-index)
 2. [Class index](#class-index)
-3. [Decreated](#decreated)
 
 ---
+## Function Index
 
-## function index
-| function             | definition                                 |
-|----------------------|--------------------------------------------|
-| [`asyncio.run(main, *, debug=None, loop_factory=None)` ](#asynciorunmain--debugnone-loop_factorynone) | Create event loop, run a coroutine, close the loop. |
-| [`asyncio.create_task(coro, *, name=None, context=None`](#asynciocreate_taskcoro--namenone-contextnone) | Start an asyncio Task, then returns it. |
-| [`asyncio.current_task(loop=None)`](#asynciocurrent_taskloopnone) | Return the currently running Task instance, or None if no task is running. |
-| [`asyncio.all_tasks(loop=None)`](#asyncioall_tasksloopnone) | Return all tasks that are not yet finished for an event loop. |
-| [`asyncio.sleep(delay, result=None)`](#asynciosleepdelay-resultnone) | Sleep for a number of seconds. |
-| [`asyncio.gather(*aws, return_exceptions=False)`](#asynciogatheraws-return_exceptionsfalse) | Schedule and wait for things concurrently. | 
-| [`asyncio.wait_for(aw, timeout)`](#asynciowait_foraw-timeout) | Run with a timeout. |
-| [`asyncio.shield(aw)`](#asyncioshieldaw) | Shield from cancellation. |
-| [`asyncio.wait(aws, *, timeout=None, return_when=asyncio.ALL_COMPLETED)`](#asynciowaitaws--timeoutnone-return_whenasyncioall_completed) | Monitor for completion. |
-| [`asyncio.timeout(delay)`](#asynciotimeoutdelay) | a context manager use to set deadline with time in sec |
-| [`asyncio.timeout_at(when)`](#asynciotimeout_atwhen) | a context manager use to set deadline but with absolute time according to loop.time() |
-| [`asyncio.to_thread(func, /, *args, **kwargs)`](#asyncioto_threadfunc--args-kwargs) | run a blocking code in separate thread from asyncio code. |
-| [`asyncio.run_coroutine_threadsafe(coro, loop)`](#asynciorun_coroutine_threadsafecoro-loop) | run a asyncio code in separate thread in thread safe way |
-| [`asyncio.as_completed(aws, *, timeout=None)`](#asyncioas_completedaws--timeoutnone) | run task in asyncio order and return iterator of aws as they finish |
+| Function                                                                                   | Definition                                                                                 |
+|--------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------|
+| [`asyncio.run(main, *, debug=None, loop_factory=None)`](#asynciorunmain--debugnone-loop_factorynone) | Create event loop, run a coroutine, close the loop.                                        |
+| [`asyncio.create_task(coro, *, name=None, context=None)`](#asynciocreate_taskcoro--namenone-contextnone) | Start an asyncio Task and return it.                                                       |
+| [`asyncio.current_task(loop=None)`](#asynciocurrent_taskloopnone)                          | Return the currently running Task instance, or `None` if no task is running.              |
+| [`asyncio.all_tasks(loop=None)`](#asyncioall_tasksloopnone)                                | Return all tasks that are not yet finished for an event loop.                             |
+| [`asyncio.iscoroutine(obj)`](#asyncioiscoroutineobj)                                       | Check if an object is a coroutine object (already called).                                |
+| [`asyncio.sleep(delay, result=None)`](#asynciosleepdelay-resultnone)                       | Sleep for a number of seconds asynchronously.                                              |
+| [`asyncio.gather(*aws, return_exceptions=False)`](#asynciogatheraws-return_exceptionsfalse) | Schedule and wait for multiple awaitables concurrently.                                   | 
+| [`asyncio.wait_for(aw, timeout)`](#asynciowait_foraw-timeout)                              | Wait for an awaitable to finish, but with a timeout.                                      |
+| [`asyncio.shield(aw)`](#asyncioshieldaw)                                                   | Protect an awaitable from being cancelled.                                                |
+| [`asyncio.wait(aws, *, timeout=None, return_when=asyncio.ALL_COMPLETED)`](#asynciowaitaws--timeoutnone-return_whenasyncioall_completed) | Wait for tasks with flexible completion rules.                                            |
+| [`asyncio.timeout(delay)`](#asynciotimeoutdelay)                                           | A context manager to set deadline using relative time in seconds.                         |
+| [`asyncio.timeout_at(when)`](#asynciotimeout_atwhen)                                       | A context manager to set deadline using absolute loop time.                               |
+| [`asyncio.to_thread(func, /, *args, **kwargs)`](#asyncioto_threadfunc--args-kwargs)        | Run blocking code in a separate thread safely inside asyncio.                             |
+| [`asyncio.run_coroutine_threadsafe(coro, loop)`](#asynciorun_coroutine_threadsafecoro-loop) | Run an asyncio coroutine from another thread, safely and synchronously.                   |
+| [`asyncio.as_completed(aws, *, timeout=None)`](#asyncioas_completedaws--timeoutnone)       | Yield awaitables as they complete, in completion order.                                   |
+| [`asyncio.eager_task_factory(loop, coro, *, name=None, context=None)`](#asyncioeager_task_factoryloop-coro--namenone-contextnone) | Task factory that runs coroutine immediately if no `await` is used.                       |
+| [`asyncio.create_eager_task_factory(custom_task_constructor)`](#asynciocreate_eager_task_factorycustom_task_constructor) | Create a custom eager task factory using your own constructor.                            |
+
 
 ## Class index
 | class                | defincation               | methods         |
 |----------------------|---------------------------|-----------------|
 | [`asyncio.Runner(*, debug=None, loop_factory=None)`](#asynciorunner-debugnone-loop_factorynone) | A context manager that simplifies multiple async function calls. | `run(coro, *, context=None)`, `get_loop()`, `close()` |
 | [`asyncio.Timeout(when: Optional[float])`](#asynciotimeoutwhen-optionalfloat) | A context manager that use to set timeout for a task or coro with absolute time  | `when()`,  `reschedule(when)`, `expired()` |
-
-
-
-
-## Decreated
-| function             | definition                                 |
-|----------------------|--------------------------------------------|
-|
+| [`asyncio.Task(coro, *, loop=None, name=None, context=None, eager_start=False)`](#asynciotaskcoro--loopnone-namenone-contextnone-eager_startfalse) | Task object which manage all Tasks. |
+| [`asyncio.TaskGroup(*, loop=None, name=None)`](#asynciotaskgroup-loopnone-namenone) | A context manager that holds a group of tasks. Provides a convenient and reliable way to wait for all tasks in the group to finish. |
 
 ---
+
 
 ## `asyncio.run(main, *, debug=None, loop_factory=None)`
 
@@ -109,6 +107,21 @@ Returns a **set of all active (unfinished) Task objects** in the given event loo
 
 ```python 
 tasks = asyncio.all_tasks()
+```
+
+---
+
+## `asyncio.iscoroutine(obj)`
+Returns **True** if the object is a coroutine object (not a coroutine function). It does not return True for regular functions or async def functions until they’re called.
+
+### Parameters
+- `obj`: The object you want to check.
+
+```python
+async def some_async(): pass
+
+iscoroutine(some_async)       # False
+iscoroutine(some_async())     # True
 ```
 
 ---
@@ -372,7 +385,51 @@ async def main():
 
 ---
 
-##
+## `asyncio.eager_task_factory(loop, coro, *, name=None, context=None)`
+This factory function makes coroutine objects start executing immediately when a task is created — instead of waiting to be scheduled by the event loop.
+- Best used when you want coroutines to **run right away**, but only if they don’t hit `await`.
+- Use with: `loop.set_task_factory(asyncio.eager_task_factory)`
+- If the coroutine reaches an await, it gets paused and scheduled like normal.
+- Mostly helpful in **special environments** or **low-latency async systems**.
+
+### Parameters
+- `loop`: The event loop where the task should run.
+- `coro`: The coroutine object to run.
+- `name`: (optional) Name for the task.
+- `context`: (optional) A `contextvars.Context` object to pass a custom scope.
+
+```python
+loop.set_task_factory(asyncio.eager_task_factory)
+task = asyncio.create_task(my_coroutine())  # Runs immediately if no await
+```
+
+---
+
+## `asyncio.create_eager_task_factory(custom_task_constructor)`
+Creates a **custom eager task factory** using your own task constructor. This gives you **control over how tasks are created and run**.
+
+- Takes a callable that mimics `Task.__init__()` and returns a Task-compatible object.
+- Your constructor must accept an `eager_start` keyword argument.
+- Use it like:
+
+```python
+loop.set_task_factory(
+    asyncio.create_eager_task_factory(my_custom_task_constructor)
+)
+```
+> Most users won’t need this — just use asyncio.eager_task_factory directly.
+> for more info read docs
+
+### Parameters
+- `custom_task_constructor`: A callable that creates and returns a Task-compatible object. Must support **eager_start**.
+
+```python
+# Custom example
+def my_constructor(loop, coro, *, name=None, context=None, eager_start=False):
+    return asyncio.Task(coro, loop=loop, name=name)
+
+loop.set_task_factory(asyncio.create_eager_task_factory(my_constructor))
+```
 
 ---
 
@@ -438,4 +495,112 @@ async def main():
 
 ---
 
-## `class asyncio.Task(coro, *, loop=None, name=None, context=None, eager_start=False)`
+## `asyncio.Task(coro, *, loop=None, name=None, context=None, eager_start=False)`
+**`not thread-safe`**
+
+A Future Like object that runs a coroutine inside it concurrently, Wraps a coroutine in a task and schedules it to run in the event loop. Tasks enable multiple coroutines to run concurrently: when one awaits (pauses), the event loop switches to another ready task.
+
+> Should not use directly use `asyncio.create_task()`
+> - If a coroutine awaits on a Future, the Task pauses until the Future completes.  
+> - `asyncio.Task` inherits from `Future` (but not `set_result()` or `set_exception()`).
+
+### Parameters
+- `coro`: The coroutine object to run.
+- `loop`: Event loop to run the task on. *(Deprecated — only use if no running loop is active).*
+- `name`: Optional task name (used for debugging).
+- `context`: A [`contextvars.Context`] to run the task in.
+- `eager_start`: If `True`, run immediately until first block (await) or completed. Otherwise, schedules the task in event loop. like normal.
+
+### Methods
+
+| Method                    | Description |
+|---------------------------|-------------|
+| `cancel(msg=None)`        | Request cancellation. Injects `CancelledError` into coroutine. |
+| `cancelled()`             | Returns `True` if task was cancelled. |
+| `cancelling()`            | Returns how many times `.cancel()` was called. |
+| `uncancel()`              | Decreases cancellation request count. |
+| `done()`                  | `True` if the task is finished (result, exception, or cancelled). |
+| `exception()`             | Returns exception raised by the task (or raises `InvalidStateError` if not done). |
+| `get_context()`           | Returns the context in which the task is running. |
+| `get_coro()`              | Returns the coroutine object wrapped by the task. |
+| `get_name()`              | Returns the task's name. |
+| `get_stack(limit=None)`   | Returns coroutine stack frames (if suspended). else empty list |
+| `print_stack(limit=None)` | Prints the stack (like traceback). |
+| `result()`                | Returns the task result (or raises if not done or has error). |
+| `set_exception(exception)`| Mark the future done and set an exception, if done raises InvalidStateError. |
+| `set_result`              | Mark the future done and set its result, if done raises InvalidStateError. |
+| `set_name(value)`         | Sets the task name. |
+| `add_done_callback(fn,context)`| Calls `fn(task)` when done. |
+| `remove_done_callback(fn)`| Removes `fn` from done callbacks. |
+
+> 🔎 Dunder and inherited methods: `__init__`, `__del__`, `__iter__`, `__repr__`, `__await__()`, `__class_getitem__`, `__new__`, and `get_loop()` (from `Future`)
+
+```python
+import asyncio
+
+async def say_hello():
+    await asyncio.sleep(1)
+    print("Hello from task!")
+
+async def main():
+    task = asyncio.create_task(say_hello(), name="MyTask")
+
+    print(f"Task started: {task.get_name()}")
+    await task
+    print("Task done.")
+
+asyncio.run(main())
+```
+
+---
+
+## `asyncio.TaskGroup(*, loop=None, name=None)`
+
+An asynchronous context manager holding a group of tasks.
+Tasks can be added using `.create_task()`. All tasks are awaited when the context manager exits.
+
+- Inside `async with`, you can still create new tasks (even from within running coroutines).
+- Once the `async with` exits (`__aexit__` is called), no new tasks can be added.
+- If any task raises an exception:
+  - Inside the block: 
+    - All tasks are cancelled (except ones already done).
+    - The task running the async with block is also cancelled.
+    - But you’ll still see the real exception, not just `CancelledError`.
+    - at the end all task cancelled and `__aexit__()` called.
+  - Outside the block (`__aexit__`): 
+    - All other tasks are cancelled (except if the exception is `CancelledError`).
+    - and `__aexit__()` called
+- All raised exceptions are grouped into `ExceptionGroup` or `BaseExceptionGroup`.
+- If the error is `SystemExit` or `KeyboardInterrupt`, it is re-raised as-is (not wrapped in ExceptionGroup).
+- Nested task groups process their own exceptions separately and cleanly.
+
+### Parameters
+- `loop`: *(Deprecated)* Event loop to run tasks in. Use only when no loop is running.
+- `name`: Optional group name (for debugging).
+
+### Methods
+
+| Method                          | Description |
+|----------------------------------|-------------|
+| `__aenter__()`                  | Enters the async context. |
+| `__aexit__(et, exc, tb)`        | Exits the context, waits for all tasks. |
+| `create_task(coro, *, name=None, context=None)` | Adds a new task to the group. Like `asyncio.create_task()`. |
+> others `__init__`, `__repr__`, `__dict__`, `__weakref__`
+
+```python
+import asyncio
+
+async def work(n):
+    await asyncio.sleep(n)
+    print(f"Task {n} done.")
+
+async def main():
+    async with asyncio.TaskGroup() as tg:
+        tg.create_task(work(1))
+        tg.create_task(work(2))
+
+asyncio.run(main())
+```
+
+---
+

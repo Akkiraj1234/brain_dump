@@ -14,17 +14,22 @@
         "gitid",
         "headingnode",
         "initscr",
+        "iscoroutine",
         "isendwin",
         "kwargs",
         "mkdn",
         "nlines",
         "putwin",
+        "repr",
         "resetty",
         "savetty",
         "scrollok",
         "setscrreg",
         "setupterm",
         "sixel",
-        "Terminfo"
+        "Terminfo",
+        "threadsafe",
+        "uncancel",
+        "weakref"
     ]
 }
