@@ -10,7 +10,9 @@
         "cursesmodule",
         "cursse",
         "customparser",
+        "Dunder",
         "endwin",
+        "getitem",
         "gitid",
         "headingnode",
         "initscr",
@@ -19,7 +21,9 @@
         "kwargs",
         "mkdn",
         "nlines",
+        "nowait",
         "putwin",
+        "qsize",
         "repr",
         "resetty",
         "savetty",
@@ -30,6 +34,7 @@
         "Terminfo",
         "threadsafe",
         "uncancel",
+        "uvloop",
         "weakref"
     ]
 }

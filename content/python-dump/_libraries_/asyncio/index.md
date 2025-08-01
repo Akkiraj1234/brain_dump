@@ -2,8 +2,8 @@
 
 > **Author** : Akhand Raj  
 > **GitHub** : [@Akkiraj1234](https://github.com/Akkiraj1234)  
-> **Date**   : 12 July 2025  
-> **Status** : ⏳ Ongoing
+> **Date**   : 1 Aug 2025  
+> **Status** : Completed
 
 ---
 
@@ -15,7 +15,7 @@
 
 There are two approaches to learning `asyncio`, depending on your goals:
 
-1. [**High-Level**](#-high-level) – For writing async applications (✅ we will focus on this)  
+1. **High-Level** – For writing async applications (✅ we will focus on this)  
 2. [**Low-Level**](#️-low-level) – For building async libraries or contributing to the `asyncio` internals (❌ not covered here)
 3. [**async programming Intro**](./defination.md) – For learning how to use async tools in real life code how to deal with stuff
 
@@ -27,25 +27,11 @@ There are two approaches to learning `asyncio`, depending on your goals:
 
 ## 🧭 Topics
 1. [**Async Programming Intro**](./defination.md)
-2. [**High Level**](#-high-level)
+2. [**High Level**](./method.md)
 3. [**Low Level**](#️-low-level)
-4. [**Methods & Classes**](./method.md)
-5. [**Resources**](#-resources)
+4. [**Resources**](#-resources)
 
 ---
-
-## 🚀 High-Level
-
-> These are user-friendly and perfect for writing real-world async applications.
-
-- [Runners](#asyncio-basics--runner)
-- [Coroutines and Tasks](#coroutines-and-tasks)
-- [Streams](https://docs.python.org/3/library/asyncio-stream.html)
-- [Synchronization Primitives](https://docs.python.org/3/library/asyncio-sync.html)
-- [Subprocesses](https://docs.python.org/3/library/asyncio-subprocess.html)
-- [Queues](https://docs.python.org/3/library/asyncio-queue.html)
-- [Exceptions](https://docs.python.org/3/library/asyncio-exceptions.html)
-
 
 ## ⚙️ [Low-Level](https://docs.python.org/3/library/asyncio.html#module-asyncio)
 
@@ -76,3 +62,4 @@ There are two approaches to learning `asyncio`, depending on your goals:
 - [Official High-Level API Index](https://docs.python.org/3/library/asyncio-api-index.html)
 - [Official Low-Level API Index](https://docs.python.org/3/library/asyncio-llapi-index.html)
 - [Official Developing with asyncio](https://docs.python.org/3/library/asyncio-dev.html)
+- [Future-asyncio](https://docs.python.org/3/library/asyncio-future.html)

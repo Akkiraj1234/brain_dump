@@ -2,16 +2,19 @@
 
 > **Author** : Akhand Raj  
 > **GitHub** : [@Akkiraj1234](https://github.com/Akkiraj1234)  
-> **Date**   : 30 July 2025  
-> **Status** : ⏳ Ongoing
+> **Date**   : 1 Aug 2025  
+> **Status** : Completed
 
 ---
 
 ## Topics
-1. [function index](#function-index)
-2. [Class index](#class-index)
+1. [Function Index](#function-index)
+2. [Class Index](#class-index)
+3. [Error Index](#error-index)
+4. [Module Index](./module.md) 
 
 ---
+
 ## Function Index
 
 | Function                                                                                   | Definition                                                                                 |
@@ -36,15 +39,29 @@
 
 
 ## Class index
-| class                | defincation               | methods         |
-|----------------------|---------------------------|-----------------|
-| [`asyncio.Runner(*, debug=None, loop_factory=None)`](#asynciorunner-debugnone-loop_factorynone) | A context manager that simplifies multiple async function calls. | `run(coro, *, context=None)`, `get_loop()`, `close()` |
-| [`asyncio.Timeout(when: Optional[float])`](#asynciotimeoutwhen-optionalfloat) | A context manager that use to set timeout for a task or coro with absolute time  | `when()`,  `reschedule(when)`, `expired()` |
-| [`asyncio.Task(coro, *, loop=None, name=None, context=None, eager_start=False)`](#asynciotaskcoro--loopnone-namenone-contextnone-eager_startfalse) | Task object which manage all Tasks. |
-| [`asyncio.TaskGroup(*, loop=None, name=None)`](#asynciotaskgroup-loopnone-namenone) | A context manager that holds a group of tasks. Provides a convenient and reliable way to wait for all tasks in the group to finish. |
+| Class                                                                                                                                              | Definition                                                              | Methods                                                           |
+|----------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------|
+| [`asyncio.Runner(*, debug=None, loop_factory=None)`](#asynciorunner-debugnone-loop_factorynone)                                                    | A context manager for running multiple async calls in the same loop.    | `run(coro, *, context=None)`, `get_loop()`, `close()`              |
+| [`asyncio.Timeout(when: Optional[float])`](#asynciotimeoutwhen-optionalfloat)                                                                      | A context manager for setting an absolute timeout on a coroutine.       | `when()`, `reschedule(when)`, `expired()`                         |
+| [`asyncio.Task(coro, *, loop=None, name=None, context=None, eager_start=False)`](#asynciotaskcoro--loopnone-namenone-contextnone-eager_startfalse) | Represents an asynchronous task created from a coroutine.               | `cancel(msg=None)`, `done()`, `result()`, `exception()`, ...       |
+| [`asyncio.TaskGroup(*, loop=None, name=None)`](#asynciotaskgroup-loopnone-namenone)                                                                | A context manager for running and waiting on multiple tasks as a group. | `create_task(coro, *, name=None)`, `cancel_scope()`, ...           |
+
+
+## Error Index
+| Error                               | Definition                                                                                                                                                                                                                                             |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `asyncio.CancelledError`            | Raised when a task is cancelled. If caught, it **must be re-raised** to ensure proper cancellation behavior.                                                                                                                                           |
+| `asyncio.TimeoutError`              | *(Deprecated)* Alias of the built-in `TimeoutError`. Raised when an operation exceeds its allotted time.                                                                                                                                               |
+| `asyncio.InvalidStateError`         | Raised when an operation is performed on a `Task` or `Future` that is in an invalid state (e.g., setting a result twice).                                                                                                                              |
+| `asyncio.IncompleteReadError`       | Raised when a read operation on a stream ends before the expected number of bytes is received. Subclass of `EOFError`. <br/>Has attributes: <br/>• `expected` – total number of bytes expected (int) <br/>• `partial` – bytes read before stream ended |
+| `asyncio.LimitOverrunError`         | Raised when the buffer size is exceeded while searching for a separator. <br/>Has attribute: <br/>• `consumed` – number of bytes that need to be skipped or discarded                                                                                  |
+| `asyncio.SendfileNotAvailableError` | Raised when the system does not support the `sendfile` syscall for a given file or socket. Subclass of `RuntimeError`.                                                                                                                                 |
+| `KeyboardInterrupt`                 | Raised when the user sends an interrupt signal (usually `Ctrl+C`). Used to gracefully stop the program.                                                                                                                                                |
+| `SystemExit`                        | Raised when `sys.exit()` is called. Used to exit from the program with a given status.                                                                                                                                                                 |
+
+
 
 ---
-
 
 ## `asyncio.run(main, *, debug=None, loop_factory=None)`
 
@@ -198,7 +215,6 @@ async def main():
 ```
 
 ---
-
 
 ## `asyncio.shield(aw)`
 **`awaitable`**\
@@ -603,4 +619,3 @@ asyncio.run(main())
 ```
 
 ---
-
