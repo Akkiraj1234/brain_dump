@@ -12,6 +12,7 @@ import asyncio # build in library no pip required but in case its missing do `su
 ## Topics
 1. [Basics](#basics)
 2. [Things U should know about asyncio](#things-u-should-know-about-asyncio)
+3. [Event Loop]
 
 
 ---
@@ -54,9 +55,66 @@ asyncio.run(main())  # main() returns a coroutine object
 ## Things U should know about asyncio.
 
 - asyncio uses weakref so object might dispear if u dont hold refreace.
-- 
+- alway cover ur task in try/except with `asyncio.CancelledError` so u can do cleanup.
+- alway re-raise `asyncio.CancelledError` after catching the error.
 
+---
 
+## Event Loop
+> **The event loop is the engine of `asyncio`.**  
+> It drives all coroutines: schedules, pauses, resumes, and coordinates everything async.
+
+### ✅ High-level usage (recommended):
+- Use `asyncio.run()`, `create_task()`, and `await` for 99% of use cases.
+- Avoid touching the event loop directly unless you're writing a **framework**, **plugin sandbox**, or low-level system.
+
+### 🧪 Common event loop functions:
+```python
+asyncio.get_running_loop()      # Current loop inside coroutine
+asyncio.get_event_loop()        # Current loop (or create if outside, <3.12)
+asyncio.new_event_loop()        # Create a fresh loop (e.g. in thread)
+asyncio.set_event_loop(loop)    # Assign loop to current thread
+```
+
+---
+
+### 🔍 Advanced event loop capabilities (if you're building a system):
+- Schedule callbacks and timers
+- Create and manage tasks/futures manually
+- TCP/UDP connections and servers
+- Work with raw sockets and pipes
+- Transfer files and watch file descriptors
+- Run subprocesses (see below)
+- Handle UNIX signals
+- Set debug mode
+- Implement custom loop policies or loop classes
+
+---
+
+## Coroutines and Tasks
+In asyncio, there are three types of awaitables that can be used with the await keyword:
+- `coroutines`
+- `Tasks`
+- `Future`
+> Awaitables: an object is an awaitable object if it can be used in an `await`
+
+### coroutines
+A coroutine is a function declared using `async def`, Calling a coroutine function like `main()` does not run it immediately. It returns a `coroutine object`.
+To actually run it, you must use await, or schedule it with a task.
+- Coroutines are **pauseable** and **resumable**, which means they can suspend execution (e.g., during I/O) and resume later.
+- await wait for it to finish before moving ahead
+
+### Tasks
+A Task is a wrapper for a coroutine that schedules it to run concurrently.
+- Created using asyncio.create_task(coro) or loop.create_task(coro).
+- when we await it , its start to run in background await don't wait for it to finish and read ahead
+> ✅ Use Tasks to run coroutines concurrently and improve performance.
+
+### Future
+A Future is a low-level awaitable object that represents a value that will be available in the future.
+> Awaiting a future means your coroutine will pause until some other part of the program resolves or sets the result of that future.
+Normally, you do not create Future objects manually in application-level code.
+They're mostly used under the hood by asyncio and libraries built on top of it.
 
 
 
@@ -76,3 +134,12 @@ asyncio.run(main())  # main() returns a coroutine object
 
 
 
+### things i need to add
+1. stack frame in loop
+2. how to handle sigint keybord interpurpt etc.
+   2. First Ctrl+C:
+      - Cancels the main coroutine via `.cancel()`
+      - Inside your coroutine, `asyncio.CancelledError` is raised
+      - You can handle cleanup there
+   1. Second Ctrl+C:
+      - Immediately raises `KeyboardInterrupt` and exits forcefully
