@@ -2,7 +2,7 @@
 
 > **Author** : Akhand Raj  
 > **GitHub** : [@Akkiraj1234](https://github.com/Akkiraj1234)  
-> **Date**   : 2 aug 2025  
+> **Date**   : 5 aug 2025  
 > **Status** : ⏳ Ongoing
 
 ## Topics
@@ -58,7 +58,7 @@ It works like `queue.Queue`, but is specifically built for async tasks.
 | `get_nowait()`              | Immediately returns an item or raises `QueueEmpty` if none are available. |
 | `put_nowait(item)`          | Immediately puts an item or raises `QueueFull` if the queue is full. |
 | `task_done()`               | Signals completion of a task taken from the queue. Raises `ValueError` if called more times than there were items put into the queue. |
-| `shutdown(immediate=False)` | Puts the queue into shutdown mode. <br/>- Stops all future `put()` calls. <br/>- If `immediate=False`: allows already added items to be processed normally using `get()` + `task_done()`. <br/>- If `immediate=True`: the queue is drained immediately, blocked `put()`/`get()` calls are cancelled, and `join()` unblocks even if some tasks were not processed. Use with caution. |
+| `shutdown(immediate=False)` | Puts the queue into shutdown mode. <br/>- Stops all future `put()` calls. and raise `QueueShutdown` if called. <br/>- If `immediate=False`: allows already added items to be processed normally using `get()` + `task_done()`. <br/>- If `immediate=True`: the queue is drained immediately, blocked `put()`/`get()` calls are cancelled, and `join()` unblocks even if some tasks were not processed. Use with caution. |
 
 ```python
 import asyncio
@@ -146,6 +146,16 @@ async def main():
 
 asyncio.run(main())
 ```
+
+---
+
+#### 🧠 Summary
+
+| Queue Type         | Order     | Internal Structure | Use Case                        |
+|--------------------|-----------|--------------------|---------------------------------|
+| `Queue`            | FIFO      | List               | Most async producer-consumer    |
+| `PriorityQueue`    | Priority  | Heap               | Task scheduling by priority     |
+| `LifoQueue`        | LIFO      | List (reversed)    | Stack-like structures           |
 
 ---
 
