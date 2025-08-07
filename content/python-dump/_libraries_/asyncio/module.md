@@ -8,10 +8,8 @@
 ## Topics
 1. [asyncio-queues](#asyncio-queues)
 2. [asyncio-subprocess](#asyncio-subprocess)
-3. [asyncio-locks]
-4. [asyncio-streams]
-5. [asyncio-exceptions]
-6. [more]
+3. [asyncio-locks](#asyncio-locks)
+4. [asyncio-streams](#asyncio-streams)
 
 ---
 
@@ -212,7 +210,7 @@ These subprocesses integrate with `asyncio`’s I/O system using `StreamReader` 
 
 ---
 
-### 📋 Index
+### Index
 
 | Function / Class                                                                 | Description                                                     | Key Methods / Attributes                                       |
 |----------------------------------------------------------------------------------|-----------------------------------------------------------------|----------------------------------------------------------------|
@@ -416,7 +414,310 @@ asyncio.run(main())
 > Deadlocks mostly happen when the subprocess pauses, waiting for you to read or write, and you’re not doing it right. communicate() is safe because it handles everything.
 
 
+## asyncio-locks
+Asyncio locks — also called **synchronization primitives** — are used to coordinate access between multiple asynchronous tasks.
+They are similar to primitives in the `threading` module, but with two key differences:
 
+- Asyncio primitives **are not thread-safe** — use them only within the same event loop.
+- Most of their methods **do not accept a `timeout` argument** — use `asyncio.wait_for()` if timeout behavior is needed.
+
+
+### Index
+| Class                                                                 | Definition                                                                                               | Key Methods                                                                                       |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [`asyncio.Lock`](#asynciolock)                                        | lock that prevents multiple tasks from accessing shared resources at the same time.                      | `acquire()`, `release()`, `locked()`                                                              |
+| [`asyncio.Event`](#asyncioevent)                                      | A simple flag for inter-task communication — one task can wait for an event to be set by another.        | `wait()`, `set()`, `clear()`, `is_set()`                                                          |
+| [`asyncio.Condition(lock=None)`](#asyncioconditionlocknone)           | A condition variable that lets tasks wait until they are notified.                                       | `acquire()`, `wait()`, `wait_for(predicate)`, `notify()`, `notify_all()`, `release()`, `locked()` |
+| [`asyncio.Semaphore(value=1)`](#asynciosemaphorevalue1)               | Limits access to a resource to a fixed number of concurrent tasks.                                       | `acquire()`, `release()`, `locked()`                                                              |
+| [`asyncio.BoundedSemaphore(value=1)`](#asyncioboundedsemaphorevalue1) | Same as `Semaphore`, but raises an error if `release()` is called too many times.                        | `acquire()`, `release()`, `locked()`                                                              |
+| [`asyncio.Barrier(parties)`](#asynciobarrierparties)                  | Lets a fixed number of tasks wait until all have reached the barrier, then continues together.           | `wait()`, `reset()`, `abort()`                                                                    |
+| [`asyncio.BrokenBarrierError`](#asynciobrokenbarriererror)            | Raised when the barrier is broken (e.g. one of the waiting tasks fails).                                 | *Exception class — no methods*                                                                    |
+
+---
+
+### `asyncio.Lock`
+A coroutine-friendly lock that ensures only one task can acquire it at a time. All other tasks trying to acquire it will pause and wait until it's released.
+
+> ✅ Always use with `async with` to automatically acquire and release the lock.
+
+#### Important Points
+- Helps safely **access shared resources** one task at a time.
+- The lock itself **doesn't own** the resource — it just controls **when a task gets to use it**.
+- Other coroutines will wait in line, and resume when the lock is free.
+
+
+#### Methods
+| Method            | Description                                                                             |
+| ----------------- | --------------------------------------------------------------------------------------- |
+| `await acquire()` | Wait until the lock is available. The first coroutine that started waiting gets access. |
+| `release()`       | Unlock the lock. Raises `RuntimeError` if already unlocked.                             |
+| `locked()`        | Return `True` if the lock is currently held by any task.                                |
+
+```python
+import asyncio
+
+lock = asyncio.Lock()
+
+async def access_shared_resource():
+    async with lock:
+        print("🔒 Resource is locked and being accessed")
+        await asyncio.sleep(1)
+    print("🔓 Lock is released")
+
+async def main():
+    await asyncio.gather(
+        access_shared_resource(),
+        access_shared_resource()
+    )
+
+asyncio.run(main())
+```
+> You can create multiple asyncio.Lock() instances — each one is independent and controls access to its own resource.
+> This means you don’t need to use a single lock for different resources. Instead, create separate locks, and tasks can access those resources in parallel without interference.
+
+---
+
+### `asyncio.Event`
+An `asyncio.Event` is a **simple signaling mechanism** used to notify one or more coroutines that something has happened.
+One task sets the event, and other tasks waiting for it will resume.
+
+> Useful for coordinating tasks — e.g., "wait until download is ready" or "start when signal is set".
+
+
+#### Important Points
+- Initially unset (`False`), and all `wait()` calls will block until it's set.
+- **Python 3.10**, the `loop` parameter has been removed.
+
+#### Methods
+
+| Method         | Description                                                                                   |
+| -------------- | --------------------------------------------------------------------------------------------- |
+| `await wait()` | Wait until the event is set. If already set, returns immediately.                             |
+| `set()`        | Set the event to "True" — wakes up all tasks waiting on it.                                   |
+| `clear()`      | Clear the event (set it to `False`) — future `wait()` calls will block again.                 |
+| `is_set()`     | Return `True` if the event is set, `False` otherwise.                                         |
+
+```python
+import asyncio
+
+event = asyncio.Event()
+
+async def waiter(name):
+    print(f"{name} is waiting for event...")
+    await event.wait()
+    print(f"{name} got the event!")
+
+async def setter():
+    print("Setter sleeping for 2 seconds...")
+    await asyncio.sleep(2)
+    print("Setter sets the event.")
+    event.set()
+
+async def main():
+    await asyncio.gather(
+        waiter("Task A"),
+        waiter("Task B"),
+        setter()
+    )
+
+asyncio.run(main())
+```
+
+---
+
+### `asyncio.Condition(lock=None)`
+`asyncio.Condition` is like a mix of `Event` and `Lock`.  
+But what does that mean?
+
+- An **`Event`** pauses all tasks until `.set()` or `.notify()` is called — then **all waiting tasks resume together**.
+- A **`Lock`** allows only **one task at a time** to access a shared resource using a `with` or `async with` block.
+
+With `Condition`, you get **both behaviors combined**:
+- You can make tasks **wait** until they are **notified**.
+- Once notified, each task will **re-acquire the lock one by one** — like a `Lock`.
+
+You can use:
+- `await cond.wait()` to wait for a notification.
+- `await cond.wait_for(predicate)` to wait until a specific condition becomes true.
+
+So `Condition` lets you coordinate **when** tasks should wake up, and also **control access** to the shared resource — **one at a time**.
+
+#### Important Points
+
+- Multiple `Condition` objects can share the same `Lock`.
+- Since **Python 3.10**, the `loop` parameter has been removed.
+- Prefer to use it as a **context manager**.
+
+#### Parameter
+
+- `lock`: *(optional)* A `Lock` object. If `None`, a new `Lock` is created automatically.
+
+#### Methods
+
+| Method                      | Description                                                                                                                                                                      |
+| --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `await acquire()`           | Wait until the lock is available. The first coroutine that started waiting gets access.                                                                                          |
+| `locked()`                  | Return `True` if the underlying lock is currently held.                                                                                                                          |
+| `release()`                 | Release the underlying lock. If called when the lock is not acquired, raises `RuntimeError`.                                                                                     |
+| `notify(n=1)`               | Wake up `n` tasks waiting on this condition. Must be called while holding the lock, otherwise raises `RuntimeError`.                                                             |
+| `notify_all()`              | Wake up all tasks waiting on this condition. Must be called while holding the lock, otherwise raises `RuntimeError`.                                                             |
+| `await wait()`              | Waits until notified. Temporarily releases the lock and blocks until a notification is received. Once notified, it re-acquires the lock before resuming. May wake up spuriously. |
+| `await wait_for(predicate)` | Wait until the given `predicate()` returns predicate value. Automatically handles re-checking after wake-up. access lock one by one.                                             |
+
+```python
+import asyncio
+
+shared_data = []
+condition = asyncio.Condition()
+
+async def consumer(name):
+    async with condition:
+        print(f"{name} is waiting for data...")
+        await condition.wait()  # Wait until producer notifies
+        print(f"{name} got data: {shared_data[-1]}")
+
+async def producer():
+    await asyncio.sleep(1)  # Simulate work
+    async with condition:
+        shared_data.append("🍎 Apple")
+        print("Producer added an item and notifying...")
+        condition.notify_all()  # Wake up all waiting consumers
+
+async def main():
+    consumers = [consumer(f"Consumer-{i}") for i in range(3)]
+    await asyncio.gather(*(consumers + [producer()]))
+
+asyncio.run(main())
+```
+
+---
+
+### `asyncio.Semaphore(value=1)`  
+
+A `Semaphore` is an **async context manager** that limits how many tasks can access a shared resource at once.  
+If the limit is reached, extra tasks will **wait** until a running task calls `release()`.
+
+#### Important Points
+- If `value < 0`, raises `ValueError`.  
+- Since **Python 3.10**, the `loop` parameter was removed.
+
+#### Parameter
+- `value`: *(default: 1)* — Max number of tasks allowed to access the resource at the same time.
+
+#### Methods
+
+| Method            | Description                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------- |
+| `await acquire()` | If the internal counter > 0, decrement it and continue. Otherwise, wait until it's > 0.     |
+| `locked()`        | Return `True` if the counter is 0 (i.e., no more tasks can acquire it right now).           |
+| `release()`       | Increment the counter by 1. If any tasks are waiting, one of them will be resumed.          |
+
+#### Example
+
+```python
+import asyncio
+
+sem = asyncio.Semaphore(3)  # Only 3 tasks can access at once
+
+async def worker(name):
+    async with sem:
+        print(f"{name} acquired")
+        await asyncio.sleep(1)
+    print(f"{name} released")
+
+async def main():
+    await asyncio.gather(*(worker(f"task-{i}") for i in range(6)))
+
+asyncio.run(main())
+```
+
+---
+
+### `asyncio.BoundedSemaphore(value=1)`  
+
+Same as [`Semaphore`](#asynciosemaphorevalue1), but **safer**.  
+Raises a `ValueError` if `release()` is called **more times than `acquire()`**.
+
+#### Parameter
+- `value`: *(default: 1)* — Max number of concurrent tasks. Must be ≥ 0.
+
+#### Example
+```python
+import asyncio
+
+sem = asyncio.BoundedSemaphore(1)
+
+async def example():
+    await sem.acquire()
+    sem.release()
+    sem.release()  # ❌ Raises ValueError
+
+asyncio.run(example())
+```
+
+---
+
+### `asyncio.Barrier(parties)`
+A `Barrier` is an **async synchronization primitive** that blocks tasks until a given number (`parties`) are waiting on it.  
+Once all required tasks reach the barrier (via `wait()` or `async with`), they **unblock together**.
+
+> for example a fruit bucket can only be passed when its have 3 fruit , not 1,2 as its reach 3 its transfer and new bucket get in line
+> - Introduced in **Python 3.11+**.
+> - if any task got canceled its `-1` the `counter`
+
+#### Parameters
+- `parties`: Number of tasks that must call `wait()` to pass the barrier.
+
+#### Attributes
+- `n_waiting`: Number of tasks currently waiting.
+- `broken`: `True` if the barrier is in a broken state (e.g., due to cancel/reset).
+
+#### Methods
+
+| Method          | Description                                                                                   |
+|-----------------|-----------------------------------------------------------------------------------------------|
+| `await wait()`  | Block until enough tasks arrive. Returns an `int` (0 to `parties-1`) unique per task.         |
+| `await reset()` | Reset the barrier. All current waiting tasks will get `BrokenBarrierError`.                   |
+| `await abort()` | Break the barrier. All waiting or future tasks raise `BrokenBarrierError` immediately.        |
+
+```python
+import asyncio
+
+async def worker(barrier, name):
+    print(f"{name} is waiting at the barrier...")
+    try:
+        await barrier.wait()
+        print(f"{name} passed the barrier ✅")
+    except asyncio.BrokenBarrierError:
+        print(f"{name} couldn't pass the barrier ❌ (broken)")
+
+async def main():
+    barrier = asyncio.Barrier(3)  # Need 3 tasks
+
+    # Only starting 2 tasks
+    t1 = asyncio.create_task(worker(barrier, "Task-1"))
+    t2 = asyncio.create_task(worker(barrier, "Task-2"))
+
+    await asyncio.sleep(0.5)  # Give them time to reach barrier
+
+    print("Main is aborting the barrier!")
+    await barrier.abort()     # Cancel the barrier
+
+    await t1
+    await t2
+
+asyncio.run(main())
+```
+
+---
+
+### `asyncio.BrokenBarrierError`
+`Exception`
+This exception, a **subclass** of `RuntimeError`, is raised when the Barrier object is **reset** or **broken**.
+
+---
+
+## asyncio-streams
 
 
 ## more..
